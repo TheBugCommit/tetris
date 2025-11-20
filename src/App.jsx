@@ -1,15 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TetrisBoard from "./components/TetrisBoard";
+import { GameProvider } from "./contexts/GameContext";
+import Router from "./routes/Router";
 
+function App() {
+  return (
+    <GameProvider>
+      <Router />
+    </GameProvider>
+  );
+}
+export default App;
+
+/*
 function App() {
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [lines, setLines] = useState(0);
+  const [gameState, setGameState] = useState("LOOBY")
+  const [playerName, setPlayerName] = useRef(0)
+
+
+  if (gameState === "LOBBY") {
+    return (
+      <div className="lobby">
+        <h1>Tetris Multiplayer</h1>
+        <input
+          value={playerName}
+          onChange={e => setPlayerName(e.target.value)}
+          placeholder="El teu nom"
+        />
+        <button onClick={joinLobby}>Unir-se</button>
+
+        <div className="ranking">
+          <h2>Ranking Històric</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
       <div className="layout">
-        {/* tablero principal */}
         <div>
           <h1 className="title">React Tetris</h1>
           <TetrisBoard
@@ -21,7 +53,6 @@ function App() {
           />
         </div>
 
-        {/* panel lateral */}
         <div className="panel">
           {paused && <div className="banner pause">Paused</div>}
           {gameOver && <div className="banner over">Game Over</div>}
@@ -39,6 +70,8 @@ function App() {
       </div>
     </div>
   );
+
+
 }
 
-export default App;
+*/

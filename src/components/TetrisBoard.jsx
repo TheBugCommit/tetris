@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ROWS, COLS, SPEED, SHAPES, COLORS } from "../constants/constants";
+import { ROWS, COLS, SPEED, SHAPES, COLORS } from "../utils/tetris/constants";
 
 
 function randomPiece() {
@@ -19,12 +19,26 @@ function getMatrix(piece) {
   return SHAPES[piece.type][piece.rotation];
 }
 
+function createGarbageLine() {
+    const line = Array(COLS).fill("G"); // 'G' representa garbage (gris)
+    const hole1 = Math.floor(Math.random() * COLS);
+    let hole2 = Math.floor(Math.random() * COLS);
+    while (hole1 === hole2) hole2 = Math.floor(Math.random() * COLS);
+    
+    line[hole1] = null;
+    line[hole2] = null;
+    return line;
+}
+
 const TetrisBoard = ({
   paused,
   setPaused,
   gameOver,
   setGameOver,
   setLines,
+  /*lines,
+  onLinesCleared,
+  incomingGarbage*/
 }) => {
   const [board, setBoard] = useState(
     Array.from({ length: ROWS }, () => Array(COLS).fill(null))
