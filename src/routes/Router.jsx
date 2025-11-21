@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
+import { Route, Routes, Navigate } from "react-router-dom"
 import Login from "../pages/Login";
 import Lobby from "../pages/Lobby";
 import RequireName from "../components/RequireName";
@@ -7,19 +7,17 @@ import Layout from "../pages/Layout";
 
 const Router = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Login />} />
-          <Route element={<RequireName />}>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Login />} />
+        <Route element={<RequireName />}>
 
-            <Route path="/lobby" element={<Lobby />} />
-            {/*<Route path="/game" element={<Game />} />*/}
-          </Route>
+          <Route path="/lobby" element={<Lobby />} />
+          {/*<Route path="/game" element={<Game />} />*/}
         </Route>
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </BrowserRouter>
+      </Route>
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 };
 

@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import TetrisBoard from "./components/TetrisBoard";
 import { GameProvider } from "./contexts/GameContext";
 import Router from "./routes/Router";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
-    <GameProvider>
-      <Router />
-    </GameProvider>
+    <BrowserRouter>
+      <GameProvider>
+        <Router />
+      </GameProvider>
+    </BrowserRouter>
   );
 }
 export default App;
