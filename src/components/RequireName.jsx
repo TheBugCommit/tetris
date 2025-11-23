@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useGame } from '../contexts/GameContext';
+import { useUser } from '../contexts/UserProvider';
 
 const RequireName = () => {
-    const { playerName } = useGame();
+    const { playerName } = useUser();
 
     if (!playerName || playerName.trim() === "") {
         return <Navigate to="/" replace />

@@ -34,7 +34,8 @@ export async function doStartGame() {
         if (!playersData[playerId].isOnline) {
             updates[`${ROOM_ID}/players/${playerId}`] = null;
         } else {
-            updates[`${ROOM_ID}/players/${playerId}/score`] = 0;
+            updates[`${ROOM_ID}/players/${playerId}/gameStats/lines`] = 0;
+            updates[`${ROOM_ID}/players/${playerId}/gameStats/level`] = 1;
         }
     });
 
@@ -48,11 +49,28 @@ export function setGameToWaiting() {
     });
 }
 
-export function setGameToOver() {
-    return update(GAME_STATE_REF, {
-        status: "GAME_OVER",
-        isPaused: true
-    });
+export async function doGameOver() {
+    const playersRef = ref(db, `${ROOM_ID}/players`);
+    
+    try {
+        const snapshot = await get(playersRef);
+        
+        if (snapshot.exists()) {
+            const currentPlayersData = snapshot.val();
+            const updates = {};
+            
+            updates[`${ROOM_ID}/gameState/status`] = "GAME_OVER";
+            updates[`${ROOM_ID}/gameState/isPaused`] = true;
+            
+            updates[`${ROOM_ID}/lastGameResults`] = currentPlayersData;
+
+            return update(ref(db), updates);
+        } else {
+            return update(ref(db, `${ROOM_ID}/gameState`), { status: "GAME_OVER" });
+        }
+    } catch (error) {
+        console.error("Error finalitzant la partida:", error);
+    }
 }
 
 export function togglePause(currentPauseState) {
@@ -62,19 +80,19 @@ export function togglePause(currentPauseState) {
 }
 
 export async function joinRoom(playerId, playerName) {
-    const userRef = ref(db, `${ROOM_ID}/players/${playerId}`);
+    const playersRef = ref(db, `${ROOM_ID}/players/${playerId}`);
 
-    const snapshot = await get(userRef);
-    onDisconnect(userRef).update({ isOnline: false });
+    const snapshot = await get(playersRef);
+    onDisconnect(playersRef).update({ isOnline: false });
 
     if (snapshot.exists()) {
         console.log(`Re-connectant a ${playerName}...`);
-        return update(userRef, { 
+        return update(playersRef, { 
             isOnline: true 
         });
     } else {
         console.log(playerId, playerName)
-        return update(userRef, {
+        return update(playersRef, {
             id: playerId,
             name: playerName,
             isOnline: true,
@@ -95,10 +113,6 @@ export function subscribeToPlayers(onPlayersChange) {
 
     onValue(PLAYERS_REF, handleData);
     return () => off(PLAYERS_REF, "value", handleData);
-}
-
-export function saveGameResults(playersList) {
-    set(RESULTS_REF, playersList);
 }
 
 export function subscribeToLastResults(onDataChange) {

@@ -1,15 +1,31 @@
-export const getRanking = async () => {
+import apiService from './apiService'
+
+const getRanking = async () => {
     try {
-        const API_URL = ""
-        const response = await fetch(`${API_URL}/ranking`);
-        if (!response.ok) throw new Error("Error fetching ranking");
-        return await response.json();
+        return apiService.get('/ranking')
     } catch (error) {
         console.error(error);
         return [];
     }
 };
 
-export const postScore = async (playerData) => {
-    // fetch POST ...
+const postRanking = async ({playerName, level, lines}) => {
+    try {
+        const data = {
+            playerName: playerName,
+            level: level,
+            totalLines: lines,
+        }
+        const response = apiService.post('/ranking', data)
+        console.log(response)
+    } catch (error) {
+        console.error(error);
+    }
 };
+
+const rankingService = {
+    getRanking,
+    postRanking
+}
+
+export default rankingService

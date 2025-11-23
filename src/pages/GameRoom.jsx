@@ -1,24 +1,33 @@
 import TetrisBoard from '../components/TetrisBoard';
-import { useGame } from '../contexts/GameContext';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PlayerList from '../components/PlayerList'
+import { useGameplay } from '../contexts/GameplayProvider';
+import { useRoom } from '../contexts/RoomProvider';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const GameRoom = () => {
     const navigate = useNavigate()
+    const { lines, level, setLines } = useGameplay()
     const {
         isGameOver,
         isPaused,
-        playerGameStats,
-        setLines,
         setGameOver,
         togglePause
-    } = useGame();
+    } = useRoom();
 
     const [countDown, setCountDown] = useState(null);
+    const [visualGameOver, setVisualGameOver] = useState(false);
 
     useEffect(() => {
         if (isGameOver) {
+            setVisualGameOver(true);
+        }
+    }, [isGameOver]);
+
+    useEffect(() => {
+        if (visualGameOver) {
+            if (countDown !== null && countDown !== 3) return;
+
             let timeLeft = 3;
             setCountDown(timeLeft);
 
@@ -28,32 +37,29 @@ const GameRoom = () => {
 
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    setCountDown(null);
                     navigate('/lobby');
                 }
             }, 1000);
 
             return () => clearInterval(timer);
-        } else {
-            setCountDown(null);
         }
-    }, [isGameOver, navigate]);
+    }, [visualGameOver, navigate]);
 
-   /* if (isGameOver) {
-        return (
-            <div className="game-over-overlay">
-                <h1>GAME OVER</h1>
-                <p>La partida ha finalitzat.</p>
-
-                {countDown !== null && (
-                    <div className="redirect-timer">
-                        <h3>Tornant al Lobby en...</h3>
-                        <div className="big-number">{countDown}</div>
-                    </div>
-                )}
-            </div>
-        );
-    }*/
+    /* if (isGameOver) {
+         return (
+             <div className="game-over-overlay">
+                 <h1>GAME OVER</h1>
+                 <p>La partida ha finalitzat.</p>
+ 
+                 {countDown !== null && (
+                     <div className="redirect-timer">
+                         <h3>Tornant al Lobby en...</h3>
+                         <div className="big-number">{countDown}</div>
+                     </div>
+                 )}
+             </div>
+         );
+     }*/
 
     return (
         <>
@@ -70,10 +76,15 @@ const GameRoom = () => {
                 </div>
 
                 <div className="panel">
-                    {isPaused && <div className="banner pause">Paused</div>}
-                    {isGameOver && <div className="banner over">Game Over</div>}
-                    <div className="stat">Lines: {playerGameStats.lines}</div>
-                    <div className="stat">Level: {playerGameStats.level}</div>
+                    {isPaused && !visualGameOver && <div className="banner pause">Paused</div>}
+                    {visualGameOver && (
+                        <div className="banner over">
+                            Game Over
+                            {countDown !== null && <span style={{ marginLeft: '10px' }}>({countDown})</span>}
+                        </div>
+                    )}
+                    <div className="stat">Lines: {lines}</div>
+                    <div className="stat">Level: {level}</div>
                     <div className="help">
                         <p>← → Move</p>
                         <p>↑ Rotate</p>

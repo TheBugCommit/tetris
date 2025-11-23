@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect, useRef } from "react"; 
 import { useNavigate } from "react-router-dom";
-import { useGame } from "../contexts/GameContext";
 import { v4 as uuidv4 } from 'uuid'; 
+import { useUser } from "../contexts/UserProvider";
 
 const Login = () => {
-  const [inputValue, setInputValue] = useState(""); 
+  const inputRef = useRef(""); 
   const [recentNames, setRecentNames] = useState([]);
 
   const navigate = useNavigate();
-
-  const { setPlayerInfo } = useGame();
+  const { setPlayerInfo } = useUser();
 
   useEffect(() => {
     try {
@@ -33,8 +32,8 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
-    loginUser(inputValue);
+    if (!inputRef.current.value.trim()) return;
+    loginUser(inputRef.current.value);
   };
 
   return (
@@ -45,8 +44,7 @@ const Login = () => {
         <input
           type="text"
           className="input-field"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          ref={inputRef}
           placeholder="Introdueix el teu nom"
           style={{ padding: "8px", borderRadius: "4px" }}
         />

@@ -1,7 +1,15 @@
-import { useGame } from '../contexts/GameContext';
+import { useEffect, useState } from 'react';
+import { useUser } from '../contexts/UserProvider';
+import * as gameService from "../services/firebase/rtdb";
 
 const PlayerList = () => {
-    const { players, playerName } = useGame();
+    const { playerName } = useUser();
+    const [players, setPlayers] = useState([]);
+
+    useEffect(() => {
+        const unsubPlayers = gameService.subscribeToPlayers(setPlayers);
+        return () => unsubPlayers();
+    })
 
     return (
         <div className="connected">
@@ -13,6 +21,7 @@ const PlayerList = () => {
                         {!p.isOnline && <span style={{ color: 'gray', fontSize: '0.8em' }}> (Desconnectat)</span>}
                     </li>
                 ))}
+                {players.length === 0 && <li>Esperant connexions...</li>}
             </ul>
         </div>
     );
