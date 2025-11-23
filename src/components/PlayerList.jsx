@@ -1,5 +1,6 @@
 import { useUser } from '../contexts/UserProvider';
 import { useRoom } from '../contexts/RoomProvider';
+import { memo } from 'react';
 
 const PlayerList = () => {
     const { playerName } = useUser();
@@ -20,4 +21,4 @@ const PlayerList = () => {
         </div>
     );
 };
-export default PlayerList;
+export default memo(PlayerList);
