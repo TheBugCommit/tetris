@@ -1,16 +1,10 @@
-import { useEffect, useState } from 'react';
 import { useUser } from '../contexts/UserProvider';
-import * as gameService from "../services/firebase/rtdb";
+import { useRoom } from '../contexts/RoomProvider';
 
 const PlayerList = () => {
     const { playerName } = useUser();
-    const [players, setPlayers] = useState([]);
-
-    useEffect(() => {
-        const unsubPlayers = gameService.subscribeToPlayers(setPlayers);
-        return () => unsubPlayers();
-    })
-
+    const { players } = useRoom();
+    
     return (
         <div className="connected">
             <h3>👥 Jugadors Connectats ({players.length})</h3>

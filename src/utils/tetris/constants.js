@@ -95,6 +95,9 @@ export const SHAPES = {
             [1, 0],
         ],
     ],
+    G: [
+        [1]
+    ]
 };
 
 export const COLORS = {
@@ -105,4 +108,5 @@ export const COLORS = {
     J: "blue",
     S: "green",
     Z: "red",
+    G: "grey"
 };

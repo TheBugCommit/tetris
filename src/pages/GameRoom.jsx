@@ -8,7 +8,15 @@ import NextPiecePreview from '../components/NextPiecePreview';
 
 const GameRoom = () => {
     const navigate = useNavigate()
-    const { lines, level, setLines, speed } = useGameplay()
+    const {
+        lines,
+        level,
+        setLines,
+        speed,
+        garbagePending,
+        consumeGarbage,
+        notification
+    } = useGameplay()
     const {
         isGameOver,
         isPaused,
@@ -19,6 +27,15 @@ const GameRoom = () => {
     const [countDown, setCountDown] = useState(null);
     const [visualGameOver, setVisualGameOver] = useState(false);
     const [nextPiecePrev, setNextPiecePrev] = useState(null)
+    const [showToast, setShowToast] = useState(null);
+
+    useEffect(() => {
+        if (notification) {
+            setShowToast(notification);
+            const timer = setTimeout(() => setShowToast(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [notification]);
 
     useEffect(() => {
         if (isGameOver) {
@@ -76,6 +93,8 @@ const GameRoom = () => {
                         setLines={setLines}
                         onNextPieceChange={setNextPiecePrev}
                         speed={speed}
+                        incomingGarbage={garbagePending}
+                        onGarbageConsumed={consumeGarbage}
                     />
                 </div>
 
@@ -100,6 +119,13 @@ const GameRoom = () => {
                     <PlayerList />
                 </div>
             </div>
+            {showToast && (
+                <div className="toast-container">
+                    <div className="toast-attack">
+                        💣 {showToast.message}
+                    </div>
+                </div>
+            )}
         </>
     );
 };

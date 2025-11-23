@@ -1,4 +1,4 @@
-import { ref, onValue, update, off, set, onDisconnect, get, child } from "firebase/database";
+import { ref, onValue, update, off, set, onDisconnect, get, child, onChildAdded, push, remove } from "firebase/database";
 import { db } from "./config";
 
 const ROOM_ID = "room";
@@ -75,7 +75,7 @@ export async function doGameOver() {
 
 export function togglePause(currentPauseState) {
     return update(GAME_STATE_REF, {
-        isPaused: !currentPauseState
+        isPaused: currentPauseState
     });
 }
 
@@ -133,4 +133,57 @@ export function clearGameResults() {
 export function updatePlayerStats(playerId, stats) {
     const playerStatsRef = ref(db, `${ROOM_ID}/players/${playerId}/gameStats`);
     update(playerStatsRef, stats);
+}
+
+// 1. ENVIAR ATAQUE (El cliente escribe en el buzón de los OTROS)
+export async function sendAttackToOthers(myPlayerId, myName, linesToSend, allPlayers) {
+    if (!allPlayers || linesToSend <= 0) return;
+
+    const updates = {};
+    
+    // Recorremos todos los jugadores
+    allPlayers.forEach(player => {
+        // No nos atacamos a nosotros mismos ni a los desconectados
+        if (player.id !== myPlayerId && player.isOnline) {
+            // Generamos una ID única para este ataque
+            const newAttackKey = push(child(ref(db), `${ROOM_ID}/players/${player.id}/incomingAttacks`)).key;
+            
+            // Preparamos el paquete de ataque
+            const attackData = {
+                sender: myName,
+                lines: linesToSend,
+                timestamp: Date.now()
+            };
+
+            // Añadimos la actualización a la lista batch
+            updates[`${ROOM_ID}/players/${player.id}/incomingAttacks/${newAttackKey}`] = attackData;
+        }
+    });
+
+    // Ejecutamos todas las escrituras a la vez (Atomic Update)
+    return update(ref(db), updates);
+}
+
+// 2. RECIBIR Y CONSUMIR (Escuchamos nuestro buzón)
+export function subscribeToIncomingAttacks(myPlayerId, onAttackReceived) {
+    const myAttacksRef = ref(db, `${ROOM_ID}/players/${myPlayerId}/incomingAttacks`);
+
+    // onChildAdded se dispara una vez por cada ataque nuevo que entra
+    const unsub = onChildAdded(myAttacksRef, (snapshot) => {
+        const attackId = snapshot.key;
+        const attackData = snapshot.val();
+
+        if (attackData) {
+            console.log(`Ataque recibido de ${attackData.sender}: ${attackData.lines} líneas`);
+            
+            // 1. Ejecutamos la acción visual en el juego
+            onAttackReceived(attackData.lines, attackData.sender);
+
+            // 2. CONSUMIMOS EL ATAQUE (Lo borramos para no procesarlo nunca más)
+            // Esto asegura el "procesar solo 1 vez"
+            remove(ref(db, `${ROOM_ID}/players/${myPlayerId}/incomingAttacks/${attackId}`));
+        }
+    });
+
+    return () => unsub(); // Devolvemos la función para desuscribirnos
 }

@@ -5,10 +5,16 @@ const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
     const [gameState, setGameState] = useState({ status: "WAITING", isPaused: false });
+    const [players, setPlayers] = useState([]);
 
     useEffect(() => {
         const unsubGame = gameService.subscribeToGameState(setGameState);
-        return () => unsubGame();
+        const unsubPlayers = gameService.subscribeToPlayers(setPlayers);
+
+        return () => {
+            unsubGame();
+            unsubPlayers();
+        }
     }, []);
 
     const startGame = useCallback(async () => await gameService.doStartGame(), []);
@@ -22,11 +28,12 @@ export const RoomProvider = ({ children }) => {
         isWaiting: gameState.status === "WAITING",
         isPaused: gameState.isPaused,
         gameState,
+        players,
         setWaitingState,
         startGame,
         togglePause,
         setGameOver
-    }), [gameState, startGame, togglePause, setGameOver, setWaitingState]);
+    }), [gameState, players, startGame, togglePause, setGameOver, setWaitingState]);
 
     return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;
 };

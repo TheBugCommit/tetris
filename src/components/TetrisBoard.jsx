@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ROWS, COLS, SHAPES, COLORS } from "../utils/tetris/constants";
 
 function randomPiece() {
-  const keys = Object.keys(SHAPES);
+  const keys = Object.keys(SHAPES).filter(key => key !== 'G');
   const type = keys[Math.floor(Math.random() * keys.length)];
   return { type, rotation: 0, x: 3, y: 0 };
 }
@@ -19,7 +19,7 @@ function getMatrix(piece) {
 }
 
 function createGarbageLine() {
-  const line = Array(COLS).fill("G"); // 'G' representa garbage (gris)
+  const line = Array(COLS).fill("G");
   const hole1 = Math.floor(Math.random() * COLS);
   let hole2 = Math.floor(Math.random() * COLS);
   while (hole1 === hole2) hole2 = Math.floor(Math.random() * COLS);
@@ -36,22 +36,45 @@ const TetrisBoard = ({
   setGameOver,
   setLines,
   onNextPieceChange,
-  speed
-  /*lines,
-  onLinesCleared,
-  incomingGarbage*/
+  speed,
+  onGarbageConsumed,
+  incomingGarbage
 }) => {
   const [board, setBoard] = useState(
     Array.from({ length: ROWS }, () => Array(COLS).fill(null))
   );
 
+  useEffect(() => {
+    setBoard(addGarbage(board, 1));
+  }, [])
+
   const [piece, setPiece] = useState(randomPiece());
   const [nextPiece, setNextPiece] = useState(randomPiece());
-  
-  useEffect(() => {
-      if (onNextPieceChange) {
-          onNextPieceChange(nextPiece);
+
+  const addGarbage = (currentBoard, amount) => {
+    if (amount <= 0) return currentBoard;
+
+    // 1. Quitamos 'amount' líneas de arriba (Game Over si había algo ahí)
+    // Comprobamos si las líneas que vamos a eliminar tienen piezas
+    for (let y = 0; y < amount; y++) {
+      if (currentBoard[y].some(cell => cell !== null)) {
+        setGameOver(true);
+        return currentBoard;
       }
+    }
+
+    // 2. Cortamos el tablero y añadimos las nuevas líneas abajo
+    const remainingBoard = currentBoard.slice(amount);
+    const newGarbageLines = Array.from({ length: amount }, () => createGarbageLine());
+
+    return [...remainingBoard, ...newGarbageLines];
+  };
+
+
+  useEffect(() => {
+    if (onNextPieceChange) {
+      onNextPieceChange(nextPiece);
+    }
   }, [nextPiece, onNextPieceChange]);
 
   const collide = (b, p, offX = 0, offY = 0) => {
@@ -108,7 +131,7 @@ const TetrisBoard = ({
     else {
       setPiece(nextPiece);
       setNextPiece(randomPiece())
-    } 
+    }
   };
 
 
@@ -120,9 +143,14 @@ const TetrisBoard = ({
     } else {
       const merged = merge(board, piece);
       const { newBoard, cleared } = clearLines(merged);
-      setBoard(newBoard);
       if (cleared > 0) setLines(cleared);
+      let finalBoard = newBoard;
+      if (incomingGarbage > 0) {
+        finalBoard = addGarbage(newBoard, incomingGarbage);
+        onGarbageConsumed();
+      }
 
+      setBoard(finalBoard);
       spawn();
     }
   };
@@ -140,7 +168,9 @@ const TetrisBoard = ({
       const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"];
       if (keys.includes(e.key) || keys.includes(e.code)) e.preventDefault();
 
-      if (e.code === "KeyP") return togglePause();
+      if (e.code === "KeyP"){
+        return togglePause();
+      } 
       if (gameOver || paused) return;
 
       if (e.key === "ArrowLeft" && !collide(board, piece, -1, 0))
@@ -164,16 +194,21 @@ const TetrisBoard = ({
         const merged = merge(board, landed);
         const { newBoard, cleared } = clearLines(merged);
 
-        setBoard(newBoard);
         if (cleared > 0) setLines(cleared);
+        let finalBoard = newBoard;
+        if (incomingGarbage > 0) {
+          finalBoard = addGarbage(newBoard, incomingGarbage);
+          onGarbageConsumed();
+        }
 
+        setBoard(finalBoard);
         spawn();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [board, piece, gameOver, paused, togglePause]);
 
 
   const getRenderBoard = (board, piece) => {
