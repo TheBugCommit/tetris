@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useCallback, useMemo, useReducer } from 'react';
+import { createContext, useContext, useEffect, useCallback, useMemo, useReducer, useState } from 'react';
 import * as gameService from "../services/firebase/rtdb";
 import { useUser } from './UserProvider'
 import { useRoom } from './RoomProvider';
 import rankingService from "../services/ranking/rankingService";
+import { SPEED } from '../utils/tetris/constants';
 
 const GameplayContext = createContext();
 
@@ -28,9 +29,11 @@ export const GameplayProvider = ({ children }) => {
         level: 1
     });
 
-    const setLines = useCallback((lines) => {
-        dispatch({ type: "ADD_LINES", payload: lines });
-    }, []);
+    const [speed, setSpeed] = useState(SPEED)
+
+    useEffect(() => {
+        setSpeed((s) => Math.max(50, SPEED * Math.pow(0.9, playerGameStats.level - 1)))
+    }, [playerGameStats.level])
 
     useEffect(() => {
         const alreadySubmitted = sessionStorage.getItem("score_submitted");
@@ -56,18 +59,23 @@ export const GameplayProvider = ({ children }) => {
         }
     }, [isGameOver, isGamePlaying])
 
-
     useEffect(() => {
         if (!playerId || !isJoined) return;
         gameService.updatePlayerStats(playerId, playerGameStats);
 
     }, [playerGameStats, playerId, isJoined]);
 
+    const setLines = useCallback((lines) => {
+        dispatch({ type: "ADD_LINES", payload: lines });
+    }, []);
+
+
     const value = useMemo(() => ({
         playerGameStats,
         setLines,
         level: playerGameStats.level,
-        lines: playerGameStats.lines
+        lines: playerGameStats.lines,
+        speed
     }), [playerGameStats, setLines]);
 
     return <GameplayContext.Provider value={value}>{children}</GameplayContext.Provider>;

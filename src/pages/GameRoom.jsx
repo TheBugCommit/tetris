@@ -8,7 +8,7 @@ import NextPiecePreview from '../components/NextPiecePreview';
 
 const GameRoom = () => {
     const navigate = useNavigate()
-    const { lines, level, setLines } = useGameplay()
+    const { lines, level, setLines, speed } = useGameplay()
     const {
         isGameOver,
         isPaused,
@@ -75,6 +75,7 @@ const GameRoom = () => {
                         setGameOver={setGameOver}
                         setLines={setLines}
                         onNextPieceChange={setNextPiecePrev}
+                        speed={speed}
                     />
                 </div>
 

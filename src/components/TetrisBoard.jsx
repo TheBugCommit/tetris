@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ROWS, COLS, SPEED, SHAPES, COLORS } from "../utils/tetris/constants";
+import { ROWS, COLS, SHAPES, COLORS } from "../utils/tetris/constants";
 
 function randomPiece() {
   const keys = Object.keys(SHAPES);
@@ -35,7 +35,8 @@ const TetrisBoard = ({
   gameOver,
   setGameOver,
   setLines,
-  onNextPieceChange
+  onNextPieceChange,
+  speed
   /*lines,
   onLinesCleared,
   incomingGarbage*/
@@ -129,9 +130,9 @@ const TetrisBoard = ({
 
   useEffect(() => {
     if (gameOver || paused) return;
-    const interval = setInterval(stepDown, SPEED);
+    const interval = setInterval(stepDown, speed);
     return () => clearInterval(interval);
-  });
+  }, [speed, stepDown, gameOver, paused]);
 
 
   useEffect(() => {
