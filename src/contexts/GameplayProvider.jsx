@@ -3,7 +3,7 @@ import * as gameService from "../services/firebase/rtdb";
 import { useUser } from './UserProvider'
 import { useRoom } from './RoomProvider';
 import rankingService from "../services/ranking/rankingService";
-import { SPEED } from '../utils/tetris/constants';
+import { SPEED } from '../constants/constants';
 
 const GameplayContext = createContext();
 
@@ -16,10 +16,6 @@ function playerStatsReducer(state, action) {
             const newLevel = Math.floor(newLines / 10) + 1;
             return { lines: newLines, level: newLevel };
         }
-        case "ADD_GARBAGE":
-            // Aquí podrías sumar un contador de "garbageQueue" para que el TetrisBoard lo pinte
-            // Ojo: Esto es solo un ejemplo, la lógica visual va en TetrisBoard normalmente
-            return { ...state, garbagePending: (state.garbagePending || 0) + action.payload };
         default: return state;
     }
 }
@@ -60,6 +56,9 @@ export const GameplayProvider = ({ children }) => {
 
     useEffect(() => {
         const alreadySubmitted = sessionStorage.getItem("score_submitted");
+        
+        setNotification(null);
+        setGarbagePending(0);
 
         if (isGameOver && playerGameStats && !alreadySubmitted) {
             (async () => {

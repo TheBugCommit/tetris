@@ -1,4 +1,4 @@
-import { SHAPES, COLORS } from "../utils/tetris/constants";
+import { SHAPES, COLORS } from "../constants/constants";
 
 const NextPiecePreview = ({ piece }) => {
     const grid = Array.from({ length: 3 }, () => Array(4).fill(0));
