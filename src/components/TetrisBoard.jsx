@@ -19,14 +19,14 @@ function getMatrix(piece) {
 }
 
 function createGarbageLine() {
-    const line = Array(COLS).fill("G"); // 'G' representa garbage (gris)
-    const hole1 = Math.floor(Math.random() * COLS);
-    let hole2 = Math.floor(Math.random() * COLS);
-    while (hole1 === hole2) hole2 = Math.floor(Math.random() * COLS);
-    
-    line[hole1] = null;
-    line[hole2] = null;
-    return line;
+  const line = Array(COLS).fill("G"); // 'G' representa garbage (gris)
+  const hole1 = Math.floor(Math.random() * COLS);
+  let hole2 = Math.floor(Math.random() * COLS);
+  while (hole1 === hole2) hole2 = Math.floor(Math.random() * COLS);
+
+  line[hole1] = null;
+  line[hole2] = null;
+  return line;
 }
 
 const TetrisBoard = ({
@@ -35,6 +35,7 @@ const TetrisBoard = ({
   gameOver,
   setGameOver,
   setLines,
+  onNextPieceChange
   /*lines,
   onLinesCleared,
   incomingGarbage*/
@@ -44,6 +45,13 @@ const TetrisBoard = ({
   );
 
   const [piece, setPiece] = useState(randomPiece());
+  const [nextPiece, setNextPiece] = useState(randomPiece());
+  
+  useEffect(() => {
+      if (onNextPieceChange) {
+          onNextPieceChange(nextPiece);
+      }
+  }, [nextPiece, onNextPieceChange]);
 
   const collide = (b, p, offX = 0, offY = 0) => {
     const m = getMatrix(p);
@@ -56,7 +64,7 @@ const TetrisBoard = ({
 
         if (ny < 0) continue;
 
-        if (nx < 0 || nx >= COLS || ny >= ROWS) return true; 
+        if (nx < 0 || nx >= COLS || ny >= ROWS) return true;
 
         if (b[ny][nx]) return true;
       }
@@ -85,7 +93,7 @@ const TetrisBoard = ({
   const clearLines = (b) => {
     const rowsKept = b.filter((r) => r.some((c) => !c));
     const cleared = ROWS - rowsKept.length;
-	
+
     const newRows = Array.from({ length: cleared }, () =>
       Array(COLS).fill(null)
     );
@@ -95,9 +103,11 @@ const TetrisBoard = ({
 
 
   const spawn = () => {
-    const newPiece = randomPiece();
-    if (collide(board, newPiece, 0, 0)) setGameOver(true);
-    else setPiece(newPiece);
+    if (collide(board, nextPiece, 0, 0)) setGameOver(true);
+    else {
+      setPiece(nextPiece);
+      setNextPiece(randomPiece())
+    } 
   };
 
 

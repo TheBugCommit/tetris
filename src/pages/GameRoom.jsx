@@ -4,6 +4,7 @@ import { useGameplay } from '../contexts/GameplayProvider';
 import { useRoom } from '../contexts/RoomProvider';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import NextPiecePreview from '../components/NextPiecePreview';
 
 const GameRoom = () => {
     const navigate = useNavigate()
@@ -17,6 +18,7 @@ const GameRoom = () => {
 
     const [countDown, setCountDown] = useState(null);
     const [visualGameOver, setVisualGameOver] = useState(false);
+    const [nextPiecePrev, setNextPiecePrev] = useState(null)
 
     useEffect(() => {
         if (isGameOver) {
@@ -72,6 +74,7 @@ const GameRoom = () => {
                         gameOver={isGameOver}
                         setGameOver={setGameOver}
                         setLines={setLines}
+                        onNextPieceChange={setNextPiecePrev}
                     />
                 </div>
 
@@ -83,6 +86,7 @@ const GameRoom = () => {
                             {countDown !== null && <span style={{ marginLeft: '10px' }}>({countDown})</span>}
                         </div>
                     )}
+                    <NextPiecePreview piece={nextPiecePrev} />
                     <div className="stat">Lines: {lines}</div>
                     <div className="stat">Level: {level}</div>
                     <div className="help">

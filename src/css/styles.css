@@ -57,6 +57,39 @@ body {
     justify-content: center;
 }
 
+.next-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* El contenedor: Copia exacta de .board pero adaptada al tamaño */
+.next-grid {
+    display: grid;
+    /* Usamos 4 columnas. 20px es un buen tamaño para la miniatura (el original es 24px) */
+    grid-template-columns: repeat(4, 20px);
+    grid-template-rows: repeat(3, 20px); /* 3 filas es suficiente */
+    gap: 2px; /* IMPORTANTE: El mismo gap que el tablero principal */
+    
+    /* Mismo fondo y bordes que .board */
+    background: #111827;
+    padding: 6px; /* Un poco de padding interno */
+    border: 1px solid #0f172a;
+    border-radius: 8px; /* Un poco menos de radio que el tablero grande */
+    
+    width: max-content; /* Para que se ajuste a las celdas */
+}
+
+/* La celda: Copia exacta de .cell */
+.next-cell {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px; /* Mismo radio proporcional */
+    
+    /* El borde es vital para que se vea la cuadrícula vacía */
+    border: 1px solid #0f172a; 
+}
+
 .cell {
     width: 24px;
     height: 24px;
