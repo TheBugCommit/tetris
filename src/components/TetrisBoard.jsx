@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { ROWS, COLS, SPEED, SHAPES, COLORS } from "../utils/tetris/constants";
 
-
 function randomPiece() {
   const keys = Object.keys(SHAPES);
   const type = keys[Math.floor(Math.random() * keys.length)];
@@ -32,7 +31,7 @@ function createGarbageLine() {
 
 const TetrisBoard = ({
   paused,
-  setPaused,
+  togglePause,
   gameOver,
   setGameOver,
   setLines,
@@ -111,7 +110,7 @@ const TetrisBoard = ({
       const merged = merge(board, piece);
       const { newBoard, cleared } = clearLines(merged);
       setBoard(newBoard);
-      if (cleared > 0) setLines((l) => l + cleared);
+      if (cleared > 0) setLines(cleared);
 
       spawn();
     }
@@ -130,7 +129,7 @@ const TetrisBoard = ({
       const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"];
       if (keys.includes(e.key) || keys.includes(e.code)) e.preventDefault();
 
-      if (e.code === "KeyP") return setPaused((p) => !p);
+      if (e.code === "KeyP") return togglePause();
       if (gameOver || paused) return;
 
       if (e.key === "ArrowLeft" && !collide(board, piece, -1, 0))
@@ -155,7 +154,7 @@ const TetrisBoard = ({
         const { newBoard, cleared } = clearLines(merged);
 
         setBoard(newBoard);
-        if (cleared > 0) setLines((l) => l + cleared);
+        if (cleared > 0) setLines(cleared);
 
         spawn();
       }

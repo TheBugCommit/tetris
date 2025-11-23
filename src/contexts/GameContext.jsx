@@ -1,83 +1,130 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'
-import { doStartGame, doTogglePause, subscribeToGameState, joinRoom, subscribeToPlayers, doGameOver, doInLobby, clearGameResults, saveGameResults, subscribeToLastResults } from "../services/firebase/rtdb"
+import { createContext, useContext, useState, useEffect, useCallback, useReducer } from 'react';
+import * as gameService from "../services/firebase/rtdb";
 
 const GameContext = createContext();
 
+function playerStatsReducer(state, action) {
+    switch (action.type) {
+        case "INIT":
+            return {
+                lines: action.payload.lines || 0,
+                level: action.payload.level || 1
+            };
+
+        case "ADD_LINES": {
+            const newLines = state.lines + action.payload;
+            const newLevel = Math.floor(newLines / 10) + 1;
+            return { lines: newLines, level: newLevel };
+        }
+
+        default:
+            return state;
+    }
+}
+
 export const GameProvider = ({ children }) => {
+
     const [players, setPlayers] = useState([]);
-    const [gameState, setGameState] = useState({ status: "WAITING", isPaused: false, players: [] });
-    const [playerName, setPlayerName] = useState(() => sessionStorage.getItem("activePlayerName") || "");
-    const [countDown, setCountDown] = useState(null);
+    const [gameState, setGameState] = useState({ status: "WAITING", isPaused: false });
     const [lastResults, setLastResults] = useState([]);
-    const navigate = useNavigate()
+    const [isJoined, setIsJoined] = useState(false);
+
+    const [playerName, setPlayerName] = useState(() => sessionStorage.getItem("activePlayerName") || "");
+    const [playerId, setPlayerId] = useState(() => sessionStorage.getItem("activePlayerId") || "");
+
+    const playerStats = Array.isArray(players) ? players.find(p => p.id === playerId) : null;
+
+    const [playerGameStats, dispatch] = useReducer(playerStatsReducer, {
+        lines: 0,
+        level: 1
+    });
 
     useEffect(() => {
-        const detachResults = subscribeToLastResults((data) => setLastResults(data));
-        return () => detachResults();
+        if (playerStats) {
+            dispatch({
+                type: "INIT",
+                payload: playerStats
+            });
+        }
+    }, [playerStats]);
+
+    useEffect(() => {
+        if (!playerId || !isJoined) return;
+
+        gameService.updatePlayerStats(playerId, playerGameStats);
+    }, [playerGameStats, playerId, isJoined]);
+
+    const setLines = useCallback((lines) => {
+        dispatch({ type: "ADD_LINES", payload: lines });
     }, []);
 
     useEffect(() => {
-        if (gameState.status === "GAME_OVER") {
+        const unsubGame = gameService.subscribeToGameState(setGameState);
+        const unsubPlayers = gameService.subscribeToPlayers(setPlayers);
+        const unsubResults = gameService.subscribeToLastResults(setLastResults);
 
-            let timeLeft = 3;
-            setCountDown(timeLeft);
+        return () => {
+            unsubGame();
+            unsubPlayers();
+            unsubResults();
+        };
+    }, []);
 
-            const timer = setInterval(() => {
-                timeLeft--;
-                setCountDown(timeLeft);
+    const setPlayerInfo = useCallback((id, name) => {
+        setPlayerName(name);
+        setPlayerId(id);
+        sessionStorage.setItem("activePlayerName", name);
+        sessionStorage.setItem("activePlayerId", id);
+    });
 
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    setCountDown(null);
-                    doInLobby();
-                    navigate('/lobby');
+    useEffect(() => {
+        if (playerId && playerName) {
+            (async () => {
+                try {
+                    await gameService.joinRoom(playerId, playerName);
+                    setIsJoined(true)
+                } catch (error) {
+                    console.error(error);
                 }
-            }, 1000);
-
-            return () => clearInterval(timer);
+            })();
         }
-    }, [gameState, navigate]);
+    }, [playerId, playerName]);
 
-    useEffect(() => {
-        const onDataUpdate = (data) => setGameState(data)
-        const detachListener = subscribeToGameState(onDataUpdate);
-        return () => detachListener();
-    }, []);
+    const startGame = async () => { await gameService.doStartGame(); };
 
-    useEffect(() => {
-        if (playerName) {
-            sessionStorage.setItem("activePlayerName", playerName);
-        } else {
-            sessionStorage.removeItem("activePlayerName");
-        }
+    const setGameOver = useCallback(() => {
+        gameService.saveGameResults(players);
+        gameService.setGameToOver();
+    }, [players]);
 
-        if (!playerName) return;
-
-        joinRoom(playerName);
-
-        const detachPlayers = subscribeToPlayers((updatedPlayers) => setPlayers(updatedPlayers));
-
-        return () => detachPlayers();
-
-    }, [playerName]);
+    const togglePause = useCallback(() => {
+        gameService.togglePause(gameState.isPaused);
+    }, [gameState.isPaused]);
 
     const value = {
-        status: gameState.status,
+        isGamePlaying: gameState.status == "PLAYING",
+        isGameOver: gameState.status == "GAME_OVER",
         isPaused: gameState.isPaused,
-        lastResults,
-        countDown,
+        playerGameStats,
         players,
-        gameOver: () => { saveGameResults(players); doGameOver(); },
-        startGame: async () => { clearGameResults(); await doStartGame(); },
-        togglePause: doTogglePause,
-        setPlayerName,
+        lastResults,
         playerName,
+        playerId,
+        setPlayerName,
+        startGame,
+        setLines,
+        setGameOver,
+        togglePause,
+        setPlayerInfo
     };
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };
 
 export const useGame = () => {
-    return useContext(GameContext);
+    const context = useContext(GameContext);
+    if (!context) {
+        throw new Error("useGame debe ser usado dentro de un GameProvider");
+    }
+    return context;
 };

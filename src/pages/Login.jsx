@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom";
-import { useGame } from "../contexts/GameContext"; 
+import { useGame } from "../contexts/GameContext";
+import { v4 as uuidv4 } from 'uuid'; 
 
 const Login = () => {
   const [inputValue, setInputValue] = useState(""); 
@@ -8,7 +9,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { setPlayerName } = useGame();
+  const { setPlayerInfo } = useGame();
 
   useEffect(() => {
     try {
@@ -19,10 +20,12 @@ const Login = () => {
     }
   }, []);
 
-  const loginUser = (nameToUse) => {
-    setPlayerName(nameToUse);
+  const loginUser = (name) => {
 
-    const newRecents = [nameToUse, ...recentNames.filter((n) => n !== nameToUse)].slice(0, 5);
+    const newPlayerId = uuidv4();
+    setPlayerInfo(newPlayerId, name);
+
+    const newRecents = [name, ...recentNames.filter((n) => n !== name)].slice(0, 5);
     localStorage.setItem("recentNames", JSON.stringify(newRecents));
 
     navigate("/lobby");
