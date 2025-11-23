@@ -3,7 +3,7 @@ import PlayerList from '../components/PlayerList'
 import { useGameplay } from '../contexts/GameplayProvider';
 import { useRoom } from '../contexts/RoomProvider';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import NextPiecePreview from '../components/NextPiecePreview';
 
 const GameRoom = () => {
@@ -28,6 +28,7 @@ const GameRoom = () => {
     const [visualGameOver, setVisualGameOver] = useState(false);
     const [nextPiecePrev, setNextPiecePrev] = useState(null)
     const [showToast, setShowToast] = useState(null);
+    const hasNavigatedRef = useRef(false); 
 
     useEffect(() => {
         if (notification) {
@@ -43,26 +44,37 @@ const GameRoom = () => {
         }
     }, [isGameOver]);
 
+
     useEffect(() => {
         if (visualGameOver) {
-            if (countDown !== null && countDown !== 3) return;
+            // Si el contador no ha empezado (es null) y no hemos navegado...
+            if (countDown === null && !hasNavigatedRef.current) {
+                setCountDown(3);
+            }
 
-            let timeLeft = 3;
-            setCountDown(timeLeft);
+            // Si ya estamos navegando, no hacemos nada más
+            if (hasNavigatedRef.current) return;
 
             const timer = setInterval(() => {
-                timeLeft--;
-                setCountDown(timeLeft);
-
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    navigate('/lobby');
-                }
+                setCountDown((prevCount) => {
+                    // Si el contador llega a 1 (el siguiente tick sería 0)
+                    if (prevCount <= 1) {
+                        clearInterval(timer);
+                        
+                        // 2. ACTIVAMOS EL CERROJO INMEDIATAMENTE
+                        if (!hasNavigatedRef.current) {
+                            hasNavigatedRef.current = true;
+                            navigate('/lobby');
+                        }
+                        return 0;
+                    }
+                    return prevCount - 1;
+                });
             }, 1000);
 
             return () => clearInterval(timer);
         }
-    }, [visualGameOver, navigate]);
+    }, [visualGameOver, navigate]); // countDown ya no es dependencia directa del effect
 
     /* if (isGameOver) {
          return (

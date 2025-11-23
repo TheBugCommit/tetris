@@ -2,7 +2,7 @@ import apiService from './apiService'
 
 const getRanking = async () => {
     try {
-        return apiService.get('/ranking')
+        return await apiService.get('/ranking')
     } catch (error) {
         console.error(error);
         return [];
@@ -16,7 +16,7 @@ const postRanking = async ({playerName, level, lines}) => {
             level: level,
             totalLines: lines,
         }
-        const response = apiService.post('/ranking', data)
+        const response = await apiService.post('/ranking', data)
         console.log(response)
     } catch (error) {
         console.error(error);

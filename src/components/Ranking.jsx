@@ -7,7 +7,6 @@ const Ranking = () => {
     useEffect(() => {
         (async () => {
             const ranking = await rankingService.getRanking()
-            ranking.sort((a, b) => b.totalLines - a.totalLines)
             setRanking(ranking)
         })()
     }, [])
