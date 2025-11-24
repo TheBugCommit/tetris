@@ -82,7 +82,6 @@ export function subscribeToIncomingAttacks(myPlayerId, onAttackReceived) {
         const attackData = helpers.mapIncomingAttack(snapshot.val());
 
         if (attackData && attackData.lines) {
-            console.log(`Ataque: ${attackData.sender}`);
             onAttackReceived(attackData.lines, attackData.sender);
             remove(ref(db, `${path}/${attackKey}`));
         }

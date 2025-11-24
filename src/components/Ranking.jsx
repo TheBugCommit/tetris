@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import rankingService from "../services/rankingService";
+import styles from './Ranking.module.css'
 
 const Ranking = () => {
     const [ranking, setRanking] = useState([]);
@@ -13,16 +14,17 @@ const Ranking = () => {
 
     return (
         <div className="panel">
-            <h3>Ranking</h3>
-            <ul>
+            <h3 className={styles.header}>Ranking</h3>
+            <ul className={styles.list}>
                 {ranking.length > 0 ? (
                     ranking.map((record, index) => (
-                        <li key={index} style={{ color: 'gold' }}>
-                            {record.playerName}: Level: {record.level}, Lines: {record.totalLines}
+                        <li key={index} className={styles.listItem}>
+                            <span>#{index + 1} {record.playerName}</span>
+                            <span>Lvl {record.level} - {record.totalLines} lines</span>
                         </li>
                     ))
                 ) : (
-                    <li>Carregant dades...</li>
+                    <li className={styles.empty}>Loading data...</li>
                 )}
             </ul>
         </div>

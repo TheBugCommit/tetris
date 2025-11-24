@@ -69,7 +69,6 @@ export const GameplayProvider = ({ children }) => {
                         lines: playerGameStats.lines
                     });
 
-                    console.log("Ranking enviado y registrado.");
                 } catch (error) {
                     sessionStorage.removeItem("score_submitted");
                 }

@@ -17,7 +17,6 @@ const postRanking = async ({playerName, level, lines}) => {
             totalLines: lines,
         }
         const response = await apiService.post('/ranking', data)
-        console.log(response)
     } catch (error) {
         console.error(error);
     }

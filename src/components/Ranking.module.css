@@ -1,0 +1,35 @@
+.header {
+    margin: 20px 0 10px 0;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    border-bottom: 2px solid #334155;
+    padding-bottom: 5px;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.listItem {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: gold;
+}
+
+.listItem:last-child {
+    border-bottom: none;
+}
+
+.empty {
+    padding: 10px 0;
+    color: #94a3b8;
+    font-style: italic;
+}

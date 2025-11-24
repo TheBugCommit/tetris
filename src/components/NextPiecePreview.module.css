@@ -1,0 +1,33 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.title {
+    font-size: 18px;
+    margin: 0;
+    color: #fff;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 20px);
+    grid-template-rows: repeat(3, 20px);
+    gap: 2px;
+    
+    background: #111827;
+    padding: 6px;
+    border: 1px solid #0f172a;
+    border-radius: 8px;
+    width: max-content;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    border: 1px solid #1f2937; /* Borde sutil */
+}

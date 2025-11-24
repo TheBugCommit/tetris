@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import styles from './ToastManager.module.css';
 
 const ToastManager = ({ notification }) => {
     const [showToast, setShowToast] = useState(null);
@@ -14,8 +15,8 @@ const ToastManager = ({ notification }) => {
     if (!showToast) return null;
 
     return (
-        <div className="toast-container">
-            <div className="toast-attack">
+        <div className={styles.container}>
+            <div className={styles.toast}>
                 💣 {showToast.message}
             </div>
         </div>

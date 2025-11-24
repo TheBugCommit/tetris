@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { checkCollision, getMatrix, rotatePieceMath, randomPiece, createGarbageLine} from '../helpers/tetrisHelpers'
-import { ROWS, COLS } from '../constants/tetrisConstants'; 
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { checkCollision, getMatrix, rotatePieceMath, randomPiece, createGarbageLine } from '../helpers/tetrisHelpers'
+import { ROWS, COLS } from '../constants/tetrisConstants';
 
-export const useTetris = ({ 
-    speed, gameOver, paused, setGameOver, setLines, 
-    onNextPieceChange, incomingGarbage, onGarbageConsumed 
+export const useTetris = ({
+    speed, gameOver, paused, setGameOver, setLines,
+    onNextPieceChange, incomingGarbage, onGarbageConsumed
 }) => {
     const [board, setBoard] = useState(Array.from({ length: ROWS }, () => Array(COLS).fill(null)));
     const [piece, setPiece] = useState(randomPiece());
@@ -23,9 +23,9 @@ export const useTetris = ({
     }, [nextPiece, onNextPieceChange]);
 
     const spawn = useCallback(() => {
-        const currentNext = nextPiece; 
+        const currentNext = nextPiece;
         const newNext = randomPiece();
-        
+
         if (checkCollision(boardRef.current, currentNext, 0, 0)) {
             setGameOver(true);
         } else {
@@ -52,7 +52,7 @@ export const useTetris = ({
         const p = pieceRef.current;
         const b = boardRef.current;
         const m = getMatrix(p);
-        
+
         const newBoard = b.map(row => [...row]);
         for (let y = 0; y < m.length; y++) {
             for (let x = 0; x < m[y].length; x++) {
@@ -91,7 +91,7 @@ export const useTetris = ({
             setPiece(prev => ({ ...prev, x: prev.x + dirX, y: prev.y + dirY }));
             return true; // Movimiento exitoso
         }
-        
+
         // Si no se puede mover abajo, bloqueamos
         if (dirY > 0) {
             lockPiece();
@@ -104,7 +104,7 @@ export const useTetris = ({
         const p = pieceRef.current;
         const b = boardRef.current;
         const rotated = rotatePieceMath(p);
-        
+
         if (!checkCollision(b, rotated, 0, 0)) {
             setPiece(rotated);
         }
@@ -119,7 +119,7 @@ export const useTetris = ({
             dy++;
         }
         const landedPiece = { ...p, y: p.y + dy };
-        pieceRef.current = landedPiece; 
+        pieceRef.current = landedPiece;
         setPiece(landedPiece);
         lockPiece();
 
@@ -151,7 +151,7 @@ export const useTetris = ({
         return temp;
     };
 
-    return {
+    return useMemo(() => ({
         board,
         piece,
         getRenderBoard,
@@ -162,5 +162,5 @@ export const useTetris = ({
             rotate,
             hardDrop
         }
-    };
+    }));
 };

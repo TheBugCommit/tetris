@@ -1,4 +1,5 @@
 import { SHAPES, COLORS } from "../constants/tetrisConstants";
+import styles from './NextPiecePreview.module.css'
 
 const NextPiecePreview = ({ piece }) => {
     const grid = Array.from({ length: 3 }, () => Array(4).fill(0));
@@ -29,14 +30,14 @@ const NextPiecePreview = ({ piece }) => {
     }
 
     return (
-        <div className="next-section">
-            <h3 className="title" style={{ fontSize: '18px', margin: 0 }}>Next</h3>
-            <div className="next-grid">
+        <div className={styles.section}>
+            <h3 className={styles.title}>Next</h3>
+            <div className={styles.grid}>
                 {grid.map((row, r) =>
                     row.map((cellType, c) => (
                         <div
                             key={`${r}-${c}`}
-                            className="next-cell"
+                            className={styles.cell}
                             style={{
                                 backgroundColor: cellType ? COLORS[cellType] : "transparent",
                             }}

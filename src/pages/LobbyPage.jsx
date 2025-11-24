@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Ranking from '../components/Ranking';
 import PlayerList from '../components/PlayerList';
 import LastGame from '../components/LastGame';
+import styles from './LobbyPage.module.css'
 
 const LobbyPage = () => {
   const navigate = useNavigate()
@@ -40,25 +41,24 @@ const LobbyPage = () => {
 
 
   if (isGamePlaying) {
-    return <div className="lobby-container"><h1>La partida està en curs...</h1></div>;
+    return <div className={styles.container}><h1>The game is in progress...</h1></div>;
   }
 
   return (
-    <div className="lobby-container">
-      <header style={{ textAlign: 'center', marginBottom: '30px' }}>
+    <div className={styles.container}>
+      <header className={styles.header}>
         <h1>TETRIS MULTIPLAYER</h1>
-        <h2 style={{ color: 'yellow', animation: 'blink 1s infinite' }}>
+        <h2 className={styles.blinkTitle}>
           PRESS ENTER TO START THE GAME
         </h2>
-        <p>Estat actual: {isGameOver ? "Partida Finalitzada" : "Esperant Jugadors"}</p>
+        <p>Actual State: {isGameOver ? "Game Over" : "Waiting Players..."}</p>
       </header>
 
-      <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '20px' }}>
-
+      <div className={styles.panelsGrid}>
         <div className="panel">
-          <LastGame />
-          <PlayerList />
-          <Ranking />
+            <LastGame />
+            <PlayerList />
+            <Ranking />
         </div>
       </div>
     </div>
