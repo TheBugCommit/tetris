@@ -1,18 +1,18 @@
 import { Route, Routes, Navigate } from "react-router-dom"
-import Login from "../pages/Login";
-import Lobby from "../pages/Lobby";
 import RequireName from "../components/RequireName";
 import Layout from "../pages/Layout";
-import GameRoom from "../pages/GameRoom";
+import TetrisPage from "../pages/TetrisPage";
+import LoginPage from "../pages/LoginPage";
+import LobbyPage from "../pages/LobbyPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<LoginPage />} />
         <Route element={<RequireName />}>
-          <Route path="/lobby" element={<Lobby />} />
-          <Route path="/game" element={<GameRoom />} />
+          <Route path="/lobby" element={<LobbyPage />} />
+          <Route path="/tetris" element={<TetrisPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" />} />

@@ -4,6 +4,7 @@ import { useUser } from './UserProvider'
 import { useRoom } from './RoomProvider';
 import rankingService from "../services/rankingService";
 import { SPEED } from '../constants/tetrisConstants';
+import { INITIAL_PLAYER_STATS } from '../constants/gameConstants';
 
 const GameplayContext = createContext();
 
@@ -24,10 +25,7 @@ export const GameplayProvider = ({ children }) => {
     const { playerId, playerName, isJoined } = useUser();
     const { isGameOver, isGamePlaying, players } = useRoom();
 
-    const [playerGameStats, dispatch] = useReducer(playerStatsReducer, {
-        lines: 0,
-        level: 1
-    });
+    const [playerGameStats, dispatch] = useReducer(playerStatsReducer, INITIAL_PLAYER_STATS);
     const [speed, setSpeed] = useState(SPEED)
     const [garbagePending, setGarbagePending] = useState(0);
     const [notification, setNotification] = useState(null);

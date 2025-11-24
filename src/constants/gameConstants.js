@@ -14,12 +14,25 @@ export const INITIAL_GAME_STATE = {
     isPaused: false
 };
 
+export const GAME_OVER_GAME_STATE = {
+    status: GAME_STATUS.GAME_OVER,
+    isPaused: true
+};
+
+export const PLAYING_GAME_STATE = {
+    status: GAME_STATUS.PLAYING,
+    isPaused: false
+};
+
+const ROOT = 'room';
 export const DB_PATHS = {
-    ROOT: 'room',
-    gameState: () => `room/gameState`,
-    players: () => `room/players`,
-    player: (id) => `room/players/${id}`,
-    playerStats: (id) => `room/players/${id}/gameStats`,
-    playerAttacks: (id) => `room/players/${id}/incomingAttacks`,
-    lastResults: () => `room/lastGameResults`,
+    ROOT: ROOT,
+    gameState: `${ROOT}/gameState`,
+    gameStateStatus: `${ROOT}/gameState/status`,
+    gameStateIsPaused: `${ROOT}/gameState/isPaused`,
+    players: `${ROOT}/players`,
+    lastResults: `${ROOT}/lastGameResults`,
+    player: (id) => `${ROOT}/players/${id}`,
+    playerStats: (id) => `${ROOT}/players/${id}/gameStats`,
+    playerAttacks: (id) => `${ROOT}/players/${id}/incomingAttacks`,
 };

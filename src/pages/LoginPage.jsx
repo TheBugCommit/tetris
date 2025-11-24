@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid'; 
 import { useUser } from "../contexts/UserProvider";
 
-const Login = () => {
+const LoginPage = () => {
   const inputRef = useRef(""); 
   const [recentNames, setRecentNames] = useState([]);
 
@@ -72,4 +72,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

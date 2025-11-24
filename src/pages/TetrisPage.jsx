@@ -7,7 +7,7 @@ import { useGameplay } from '../contexts/GameplayProvider';
 import { useRoom } from '../contexts/RoomProvider';
 import { useGameOverRedirect } from '../hooks/useGameOverRedirect'; // Nuevo hook
 
-const GameRoom = () => {
+const TetrisPage = () => {
     const { 
         lines, level, setLines, speed, 
         garbagePending, consumeGarbage, notification 
@@ -71,4 +71,4 @@ const GameRoom = () => {
     );
 };
 
-export default GameRoom;
+export default TetrisPage;

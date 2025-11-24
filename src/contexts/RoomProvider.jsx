@@ -1,10 +1,11 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import * as gameService from "../services/gameService";
+import { GAME_STATUS, INITIAL_GAME_STATE } from '../constants/gameConstants';
 
 const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
-    const [gameState, setGameState] = useState({ status: "WAITING", isPaused: false });
+    const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
     const [players, setPlayers] = useState([]);
 
     useEffect(() => {
@@ -18,14 +19,14 @@ export const RoomProvider = ({ children }) => {
     }, []);
 
     const startGame = useCallback(async () => await gameService.doStartGame(), []);
-    const togglePause = useCallback(() => gameService.togglePause(!gameState.isPaused), [gameState.isPaused]);
+    const togglePause = useCallback(() => gameService.togglePause(gameState.isPaused), [gameState.isPaused]);
     const setGameOver = useCallback(async () => await gameService.doGameOver(), []);
     const setWaitingState = useCallback(() => gameService.setGameToWaiting(), []);
 
     const value = useMemo(() => ({
-        isGamePlaying: gameState.status === "PLAYING",
-        isGameOver: gameState.status === "GAME_OVER",
-        isWaiting: gameState.status === "WAITING",
+        isGamePlaying: gameState.status === GAME_STATUS.PLAYING,
+        isGameOver: gameState.status === GAME_STATUS.GAME_OVER,
+        isWaiting: gameState.status === GAME_STATUS.WAITING,
         isPaused: gameState.isPaused,
         gameState,
         players,

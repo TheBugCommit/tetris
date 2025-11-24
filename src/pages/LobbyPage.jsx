@@ -5,7 +5,7 @@ import Ranking from '../components/Ranking';
 import PlayerList from '../components/PlayerList';
 import LastGame from '../components/LastGame';
 
-const Lobby = () => {
+const LobbyPage = () => {
   const navigate = useNavigate()
   const {
     isGameOver,
@@ -34,7 +34,7 @@ const Lobby = () => {
 
   useEffect(() => {
     if (isGamePlaying) {
-      navigate('/game');
+      navigate('/tetris');
     }
   }, [isGamePlaying, navigate]);
 
@@ -65,4 +65,4 @@ const Lobby = () => {
   );
 };
 
-export default Lobby;
+export default LobbyPage;
