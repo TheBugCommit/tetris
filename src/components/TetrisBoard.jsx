@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { COLORS } from "../constants/constants";
+import { COLORS } from "../constants/tetrisConstants";
 import { useTetris } from "../hooks/useTetris";
 
 const TetrisBoard = (props) => {

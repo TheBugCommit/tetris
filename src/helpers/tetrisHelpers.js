@@ -1,4 +1,4 @@
-import { ROWS, COLS, SHAPES } from "../constants/constants";
+import { ROWS, COLS, SHAPES } from "../constants/tetrisConstants";
 
 export const randomPiece = () => {
     const keys = Object.keys(SHAPES).filter(key => key !== 'G');

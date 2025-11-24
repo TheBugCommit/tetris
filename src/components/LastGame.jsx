@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import * as gameService from "../services/firebase/rtdb";
+import * as gameService from "../services/gameService";
 
 
 const LastGame = () => {

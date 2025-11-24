@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useCallback, useMemo, useReducer, useState } from 'react';
-import * as gameService from "../services/firebase/rtdb";
+import * as gameService from "../services/gameService";
 import { useUser } from './UserProvider'
 import { useRoom } from './RoomProvider';
-import rankingService from "../services/ranking/rankingService";
-import { SPEED } from '../constants/constants';
+import rankingService from "../services/rankingService";
+import { SPEED } from '../constants/tetrisConstants';
 
 const GameplayContext = createContext();
 

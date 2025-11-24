@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import * as gameService from "../services/firebase/rtdb";
+import * as gameService from "../services/gameService";
 
 const RoomContext = createContext();
 

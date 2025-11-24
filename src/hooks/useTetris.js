@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { checkCollision, getMatrix, rotatePieceMath, randomPiece, createGarbageLine} from '../helpers/tetrisHelpers'
-import { ROWS, COLS } from '../constants/constants'; 
+import { ROWS, COLS } from '../constants/tetrisConstants'; 
 
 export const useTetris = ({ 
     speed, gameOver, paused, setGameOver, setLines, 
@@ -118,23 +118,9 @@ export const useTetris = ({
         while (!checkCollision(b, p, 0, dy + 1)) {
             dy++;
         }
-        // Movemos visualmente la pieza al fondo y bloqueamos inmediatamente
-        setPiece(prev => ({ ...prev, y: prev.y + dy }));
-        
-        // Usamos un timeout 0 o llamamos directamente a lockPiece, 
-        // pero necesitamos que el estado de 'piece' se actualice primero o pasar la pieza modificada.
-        // Para simplificar y evitar condiciones de carrera con el estado, llamamos a la lógica de lock manual:
-        
-        // (Replicamos lógica de lock con la pieza ya abajo)
-        // Nota: Como setPiece es asíncrono, mejor llamamos a lock pasando la pieza "hipotética" o forzamos un ciclo.
-        // Solución robusta: Movemos la pieza y dejamos que el siguiente tick o llamada forzada lo bloquee.
-        // Pero para "Hard Drop" instantáneo, es mejor calcular y guardar en un paso.
-        
-        // Versión simplificada: Calculamos todo en memoria y guardamos TABLERO FINAL directo.
         const landedPiece = { ...p, y: p.y + dy };
-        
-        // HACK: Actualizamos la ref manualmente para que lockPiece use la correcta YA
         pieceRef.current = landedPiece; 
+        setPiece(landedPiece);
         lockPiece();
 
     }, [gameOver, paused, lockPiece]);

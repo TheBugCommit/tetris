@@ -1,5 +1,5 @@
 import { ref, onValue, update, off, set, onDisconnect, get, child, onChildAdded, push, remove } from "firebase/database";
-import { db } from "./config";
+import { db } from "../config/firebase";
 
 const ROOM_ID = "room";
 const GAME_STATE_REF = ref(db, `${ROOM_ID}/gameState`);
