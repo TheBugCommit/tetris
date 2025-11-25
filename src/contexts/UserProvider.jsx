@@ -1,26 +1,28 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import * as gameService from "../services/gameService";
+import StorageService from '../services/StorageService'
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [playerName, setPlayerName] = useState(() => sessionStorage.getItem("activePlayerName") || "");
-    const [playerId, setPlayerId] = useState(() => sessionStorage.getItem("activePlayerId") || "");
+    const [user, setUser] = useState(() => {
+        const saved = StorageService.getUser();
+        return saved || { id: "", name: "" };
+    });
+
     const [isJoined, setIsJoined] = useState(false);
 
     const setPlayerInfo = useCallback((id, name) => {
-        setPlayerName(name);
-        setPlayerId(id);
-        sessionStorage.setItem("activePlayerName", name);
-        sessionStorage.setItem("activePlayerId", id);
+        setUser({ id, name });
+        StorageService.setUser(id, name);
     }, []);
 
     useEffect(() => {
-        if (playerId && playerName) {
+        if (user.id && user.name) {
             let mounted = true;
             (async () => {
                 try {
-                    await gameService.joinRoom(playerId, playerName);
+                    await gameService.joinRoom(user.id, user.name);
                     if (mounted) setIsJoined(true);
                 } catch (error) {
                     console.error("Error joining room:", error);
@@ -28,14 +30,14 @@ export const UserProvider = ({ children }) => {
             })();
             return () => { mounted = false; };
         }
-    }, [playerId, playerName]);
+    }, [user.id, user.name]);
 
     const value = useMemo(() => ({
-        playerId,
-        playerName,
+        playerId: user.id,
+        playerName: user.name,
         isJoined,
         setPlayerInfo
-    }), [playerId, playerName, isJoined, setPlayerInfo]);
+    }), [user, isJoined, setPlayerInfo]);
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

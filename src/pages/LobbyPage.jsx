@@ -17,8 +17,9 @@ const LobbyPage = () => {
   } = useRoom();
 
   useEffect(() => {
-    setWaitingState(); 
-  }, []);
+    if(isGameOver)
+      setWaitingState(); 
+  }, [isGameOver]);
 
   useEffect(() => {
     const handleKeyDown = async (e) => {
@@ -35,7 +36,7 @@ const LobbyPage = () => {
 
   useEffect(() => {
     if (isGamePlaying) {
-      navigate('/tetris');
+      navigate('/tetris', {replace: true});
     }
   }, [isGamePlaying, navigate]);
 

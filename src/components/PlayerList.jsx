@@ -3,7 +3,7 @@ import { useRoom } from '../contexts/RoomProvider';
 import styles from './PlayerList.module.css'
 
 const PlayerList = () => {
-    const { playerName } = useUser();
+    const { playerId } = useUser();
     const { players } = useRoom();
     
     return (
@@ -13,7 +13,7 @@ const PlayerList = () => {
             </h3>
             <ul className={styles.list}>
                 {players.map((p) => {
-                    const isMe = p.name === playerName;
+                    const isMe = p.id === playerId;
                     return (
                         <li key={p.id} className={styles.listItem}>
                             <span className={isMe ? styles.currentUser : styles.otherUser}>

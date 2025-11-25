@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TetrisBoard from '../components/TetrisBoard';
 import PlayerList from '../components/PlayerList';
 import NextPiecePreview from '../components/NextPiecePreview';
@@ -7,15 +7,23 @@ import { useGameplay } from '../contexts/GameplayProvider';
 import { useRoom } from '../contexts/RoomProvider';
 import { useGameOverRedirect } from '../hooks/useGameOverRedirect';
 import styles from './TetrisPage.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const TetrisPage = () => {
     const {
         lines, level, setLines, speed,
         garbagePending, consumeGarbage, notification
     } = useGameplay();
-    const { isGameOver, isPaused, setGameOver, togglePause } = useRoom();
+    const { isGameOver, isGamePlaying, isPaused, setGameOver, togglePause } = useRoom();
     const [nextPiecePrev, setNextPiecePrev] = useState(null);
     const { visualGameOver, countDown } = useGameOverRedirect(isGameOver);
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!isGamePlaying) {
+            navigate('/lobby', {replace: true})
+        }
+    }, [isGamePlaying])
 
     return (
         <div className={styles.layout}>
