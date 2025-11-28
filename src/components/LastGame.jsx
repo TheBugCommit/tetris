@@ -1,15 +1,8 @@
-import { useEffect, useState } from "react";
-import * as gameService from "../services/gameService";
 import styles from './LastGame.module.css'
-
+import { useLastGameResults } from "../hooks/useLastGameResults";
 
 const LastGame = () => {
-    const [lastResults, setLastResults] = useState([]);
-
-    useEffect(() => {
-        const unsubResults = gameService.subscribeToLastResults(setLastResults);
-        return () => unsubResults();
-    }, [])
+    const lastResults = useLastGameResults();
 
     return (
         <>

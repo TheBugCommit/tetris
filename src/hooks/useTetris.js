@@ -1,42 +1,60 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useEffect, useCallback, useRef, useMemo, useState } from 'react';
 import { checkCollision, getMatrix, rotatePieceMath, randomPiece, createGarbageLine } from '../helpers/tetrisHelpers'
 import { ROWS, COLS } from '../constants/tetrisConstants';
+
+const INITIAL_GAME_STATE = {
+    board: Array.from({ length: ROWS }, () => Array(COLS).fill(null)),
+    piece: null,
+    nextPiece: null
+};
 
 export const useTetris = ({
     speed, gameOver, paused, setGameOver, setLines,
     onNextPieceChange, incomingGarbage, onGarbageConsumed
 }) => {
-    const [board, setBoard] = useState(Array.from({ length: ROWS }, () => Array(COLS).fill(null)));
-    const [piece, setPiece] = useState(randomPiece());
-    const [nextPiece, setNextPiece] = useState(randomPiece());
 
-    const boardRef = useRef(board);
-    const pieceRef = useRef(piece);
-    const incomingGarbageRef = useRef(incomingGarbage);
-
-    useEffect(() => { boardRef.current = board; }, [board]);
-    useEffect(() => { pieceRef.current = piece; }, [piece]);
-    useEffect(() => { incomingGarbageRef.current = incomingGarbage; }, [incomingGarbage]);
+    const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
 
     useEffect(() => {
-        if (onNextPieceChange) onNextPieceChange(nextPiece);
-    }, [nextPiece, onNextPieceChange]);
+        if (!gameState.piece || !gameState.nextPiece) {
+            setGameState(prev => ({
+                ...prev,
+                piece: randomPiece(),
+                nextPiece: randomPiece()
+            }));
+        }
+    }, []);
+
+    const stateRef = useRef(gameState);
+    const incomingGarbageRef = useRef(incomingGarbage);
+
+    useEffect(() => { stateRef.current = gameState; }, [gameState]);
+    useEffect(() => { incomingGarbageRef.current = incomingGarbage; }, [incomingGarbage])
+
+    useEffect(() => {
+        if (gameState.nextPiece && onNextPieceChange) {
+            onNextPieceChange(gameState.nextPiece);
+        }
+    }, [gameState.nextPiece, onNextPieceChange]);
 
     const spawn = useCallback(() => {
-        const currentNext = nextPiece;
+        const { board, nextPiece } = stateRef.current;
         const newNext = randomPiece();
 
-        if (checkCollision(boardRef.current, currentNext, 0, 0)) {
+        if (checkCollision(board, nextPiece, 0, 0)) {
             setGameOver(true);
         } else {
-            setPiece(currentNext);
-            setNextPiece(newNext);
+            setGameState(prev => ({
+                ...prev,
+                board: board,
+                piece: nextPiece,
+                nextPiece: newNext
+            }));
         }
-    }, [nextPiece, setGameOver]);
+    }, [setGameOver, setGameState]);
 
     const addGarbage = (currentBoard, amount) => {
         if (amount <= 0) return currentBoard;
-        // Check Game Over en las líneas superiores
         for (let y = 0; y < amount; y++) {
             if (currentBoard[y].some(cell => cell !== null)) {
                 setGameOver(true);
@@ -49,118 +67,108 @@ export const useTetris = ({
     };
 
     const lockPiece = useCallback(() => {
-        const p = pieceRef.current;
-        const b = boardRef.current;
-        const m = getMatrix(p);
+        const { piece, board } = stateRef.current;
+        const matrix = getMatrix(piece);
 
-        const newBoard = b.map(row => [...row]);
-        for (let y = 0; y < m.length; y++) {
-            for (let x = 0; x < m[y].length; x++) {
-                if (m[y][x]) {
-                    const ny = p.y + y;
-                    const nx = p.x + x;
-                    if (ny >= 0) newBoard[ny][nx] = p.type;
+        const newBoard = board.map(row => [...row]);
+        matrix.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value) {
+                    const ny = piece.y + y;
+                    const nx = piece.x + x;
+                    if (ny >= 0 && ny < ROWS) newBoard[ny][nx] = piece.type;
                 }
-            }
-        }
+            });
+        });
 
-        const rowsKept = newBoard.filter(r => r.some(c => !c));
+        const rowsKept = newBoard.filter(row => row.some(cell => !cell));
         const cleared = ROWS - rowsKept.length;
-        let finalBoardRows = [...Array.from({ length: cleared }, () => Array(COLS).fill(null)), ...rowsKept];
+        let finalBoard = [...Array(cleared).fill(null).map(() => Array(COLS).fill(null)), ...rowsKept];
 
         if (cleared > 0) setLines(cleared);
 
-        // 3. Aplicar Basura (Ataques) si hay pendiente
         const garbageAmount = incomingGarbageRef.current;
         if (garbageAmount > 0) {
-            finalBoardRows = addGarbage(finalBoardRows, garbageAmount);
+            finalBoard = addGarbage(finalBoard, garbageAmount);
             if (onGarbageConsumed) onGarbageConsumed();
         }
 
-        setBoard(finalBoardRows);
-        spawn();
-
+        stateRef.current.board = finalBoard
+        spawn()
     }, [setLines, spawn, onGarbageConsumed, setGameOver]);
 
     const move = useCallback((dirX, dirY) => {
         if (gameOver || paused) return;
-        const p = pieceRef.current;
-        const b = boardRef.current;
+        const { piece, board } = stateRef.current;
 
-        if (!checkCollision(b, p, dirX, dirY)) {
-            setPiece(prev => ({ ...prev, x: prev.x + dirX, y: prev.y + dirY }));
-            return true; // Movimiento exitoso
+        if (!checkCollision(board, piece, dirX, dirY)) {
+            setGameState(prev => ({
+                ...prev,
+                piece: { ...prev.piece, x: prev.piece.x + dirX, y: prev.piece.y + dirY }
+            }));
+            return true;
         }
 
-        // Si no se puede mover abajo, bloqueamos
-        if (dirY > 0) {
-            lockPiece();
-        }
-        return false; // Colisión
-    }, [gameOver, paused, lockPiece]);
+        if (dirY > 0) lockPiece();
+        return false;
+    }, [gameOver, paused, lockPiece, setGameState]);
 
     const rotate = useCallback(() => {
         if (gameOver || paused) return;
-        const p = pieceRef.current;
-        const b = boardRef.current;
-        const rotated = rotatePieceMath(p);
-
-        if (!checkCollision(b, rotated, 0, 0)) {
-            setPiece(rotated);
+        const { piece, board } = stateRef.current;
+        const rotated = rotatePieceMath(piece);
+        if (!checkCollision(board, rotated, 0, 0)) {
+            setGameState(prev => ({ ...prev, piece: rotated }));
         }
-    }, [gameOver, paused]);
+    }, [gameOver, paused, setGameState]);
 
     const hardDrop = useCallback(() => {
         if (gameOver || paused) return;
-        const p = pieceRef.current;
-        const b = boardRef.current;
+        const { piece, board } = stateRef.current;
+        if (!piece) return;
+        
         let dy = 0;
-        while (!checkCollision(b, p, 0, dy + 1)) {
-            dy++;
-        }
-        const landedPiece = { ...p, y: p.y + dy };
-        pieceRef.current = landedPiece;
-        setPiece(landedPiece);
+        while (!checkCollision(board, piece, 0, dy + 1)) dy++;
+        
+        stateRef.current.piece = { ...piece, y: piece.y + dy };
         lockPiece();
-
     }, [gameOver, paused, lockPiece]);
 
-    // Intervalo de Gravedad (Game Loop)
     useEffect(() => {
         if (gameOver || paused) return;
-        const interval = setInterval(() => {
-            move(0, 1); // Step Down
-        }, speed);
+        const interval = setInterval(() => move(0, 1), speed);
         return () => clearInterval(interval);
     }, [speed, gameOver, paused, move]);
 
-    // Helper para renderizado
     const getRenderBoard = () => {
+        const { board, piece } = gameState;
+        if (!board || !piece) return Array(ROWS).fill(Array(COLS).fill(null));
+
         const temp = board.map(row => [...row]);
-        const m = getMatrix(piece);
-        for (let y = 0; y < m.length; y++) {
-            for (let x = 0; x < m[y].length; x++) {
-                if (!m[y][x]) continue;
-                const ny = piece.y + y;
-                const nx = piece.x + x;
-                if (ny >= 0 && ny < ROWS && nx >= 0 && nx < COLS) {
-                    temp[ny][nx] = piece.type;
+        const matrix = getMatrix(piece);
+        matrix.forEach((row, y) => {
+            row.forEach((val, x) => {
+                if (val) {
+                    const ny = piece.y + y;
+                    const nx = piece.x + x;
+                    if (ny >= 0 && ny < ROWS) temp[ny][nx] = piece.type;
                 }
-            }
-        }
+            });
+        });
         return temp;
     };
 
     return useMemo(() => ({
-        board,
-        piece,
+        board: gameState.board,
+        piece: gameState.piece,
+        nextPiece: gameState.nextPiece,
         getRenderBoard,
         actions: {
             moveLeft: () => move(-1, 0),
             moveRight: () => move(1, 0),
             moveDown: () => move(0, 1),
             rotate,
-            hardDrop
+            hardDrop,
         }
-    }));
+    }), [gameState, getRenderBoard, move, rotate, hardDrop]);
 };

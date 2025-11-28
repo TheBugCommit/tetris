@@ -35,7 +35,7 @@ const addRecentName = (name) => {
 
     const newNames = [name, ...currentNames.filter(n => n !== name)].slice(0, 5);
 
-    window.localStorage.setItem(KEYS.RECENT_NAMES, JSON.stringify(newNames));
+    localStorage.setItem(KEYS.RECENT_NAMES, JSON.stringify(newNames));
     return newNames;
 }
 
@@ -44,7 +44,7 @@ const StorageService = {
     setUser,
     clearUser,
     getRecentNames,
-    addRecentName
+    addRecentName,
 };
 
 export default StorageService;

@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from "../contexts/UserProvider";
 import styles from './LoginPage.module.css'
@@ -8,7 +7,6 @@ import { useRecentNames } from "../hooks/useRecentNames";
 
 const LoginPage = () => {
   const inputRef = useRef("");
-  const navigate = useNavigate();
   
   const { setPlayerInfo, isJoined } = useUser();
   const [_, addName] = useRecentNames();
@@ -17,9 +15,8 @@ const LoginPage = () => {
     if (!name) return;
     const newPlayerId = uuidv4();
 
-    setPlayerInfo(newPlayerId, name);
     addName(name);
-    navigate("/lobby", { replace: true });
+    setPlayerInfo(newPlayerId, name);
   }
 
   const handleSubmit = (e) => {
@@ -28,11 +25,6 @@ const LoginPage = () => {
     if (!val) return;
     loginUser(val);
   };
-
-  useEffect(() => {
-    if(isJoined)
-      navigate('/lobby', { replace: true })
-  }, [isJoined])
 
   return (
     <div className={styles.container}>

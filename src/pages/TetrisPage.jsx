@@ -7,39 +7,40 @@ import { useGameplay } from '../contexts/GameplayProvider';
 import { useRoom } from '../contexts/RoomProvider';
 import { useGameOverRedirect } from '../hooks/useGameOverRedirect';
 import styles from './TetrisPage.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useTetris } from '../hooks/useTetris';
+import { useKeyboardControls } from '../hooks/useKeyboardControls';
 
 const TetrisPage = () => {
     const {
         lines, level, setLines, speed,
         garbagePending, consumeGarbage, notification
     } = useGameplay();
-    const { isGameOver, isGamePlaying, isPaused, setGameOver, togglePause } = useRoom();
-    const [nextPiecePrev, setNextPiecePrev] = useState(null);
+    const { isGameOver, isPaused, setGameOver, togglePause } = useRoom();
     const { visualGameOver, countDown } = useGameOverRedirect(isGameOver);
-    const navigate = useNavigate()
 
-    useEffect(() => {
-        if(!isGamePlaying) {
-            navigate('/lobby', {replace: true})
-        }
-    }, [isGamePlaying])
+    const { nextPiece, actions, getRenderBoard } = useTetris({
+        speed,
+        gameOver: isGameOver,
+        paused: isPaused,
+        setGameOver,
+        setLines,
+        incomingGarbage: garbagePending,
+        onGarbageConsumed: consumeGarbage
+    });
+
+    useKeyboardControls(
+        { ...actions, togglePause },
+        !isGameOver, 
+        isPaused
+    );
+
+    const renderBoard = getRenderBoard(); 
 
     return (
         <div className={styles.layout}>
             <div className={styles.gameSection}>
                 <h1 className={styles.title}>Tetris</h1>
-                <TetrisBoard
-                    paused={isPaused}
-                    togglePause={togglePause}
-                    gameOver={isGameOver}
-                    setGameOver={setGameOver}
-                    setLines={setLines}
-                    onNextPieceChange={setNextPiecePrev}
-                    speed={speed}
-                    incomingGarbage={garbagePending}
-                    onGarbageConsumed={consumeGarbage}
-                />
+                <TetrisBoard board={renderBoard} />
             </div>
             <div className={styles.panel}>
                 {isPaused && !visualGameOver && <div className={`${styles.banner} ${styles.paused}`}>PAUSED</div>}
@@ -49,7 +50,7 @@ const TetrisPage = () => {
                         {countDown !== null && <span>({countDown})</span>}    
                     </div>}
 
-                <NextPiecePreview piece={nextPiecePrev} />
+                <NextPiecePreview piece={nextPiece} />
 
                 <div className={styles.statBox}>
                     <div className={styles.statLabel}>Lines</div>

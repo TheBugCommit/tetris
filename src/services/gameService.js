@@ -44,7 +44,9 @@ export async function doGameOver() {
 }
 
 export function togglePause(currentPauseState) {
-    return update(ref(db, gameConst.DB_PATHS.gameStateIsPaused), !currentPauseState);
+    return update(ref(db, gameConst.DB_PATHS.gameState),
+        { isPaused: !currentPauseState }
+    );
 }
 
 // --- ESCRITURA (PLAYER) ---
@@ -76,7 +78,7 @@ export async function sendAttackToOthers(myId, myName, lines, allPlayers) {
 
 export function subscribeToIncomingAttacks(myPlayerId, onAttackReceived) {
     const path = gameConst.DB_PATHS.playerAttacks(myPlayerId);
-    
+
     const unsub = onChildAdded(ref(db, path), (snapshot) => {
         const attackKey = snapshot.key;
         const attackData = helpers.mapIncomingAttack(snapshot.val());

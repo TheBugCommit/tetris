@@ -1,49 +1,26 @@
 import { useRoom } from '../contexts/RoomProvider';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Ranking from '../components/Ranking';
 import PlayerList from '../components/PlayerList';
 import LastGame from '../components/LastGame';
 import styles from './LobbyPage.module.css'
+import { useLobbyControls } from '../hooks/useLobbyControls';
 
 const LobbyPage = () => {
-  const navigate = useNavigate()
   const {
     isGameOver,
     isGamePlaying,
-    isWaiting,
     startGame,
     setWaitingState,
   } = useRoom();
 
   useEffect(() => {
-    if(isGameOver)
-      setWaitingState(); 
+    if (isGameOver) {
+      setWaitingState();
+    }
   }, [isGameOver]);
 
-  useEffect(() => {
-    const handleKeyDown = async (e) => {
-      if (e.key === "Enter") {
-        if (!isGamePlaying) {
-          await startGame();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isGameOver, startGame]);
-
-  useEffect(() => {
-    if (isGamePlaying) {
-      navigate('/tetris', {replace: true});
-    }
-  }, [isGamePlaying, navigate]);
-
-
-  if (isGamePlaying) {
-    return <div className={styles.container}><h1>The game is in progress...</h1></div>;
-  }
+  useLobbyControls(startGame, isGamePlaying)
 
   return (
     <div className={styles.container}>
@@ -57,9 +34,9 @@ const LobbyPage = () => {
 
       <div className={styles.panelsGrid}>
         <div className="panel">
-            <LastGame />
-            <PlayerList />
-            <Ranking />
+          <LastGame />
+          <PlayerList />
+          <Ranking />
         </div>
       </div>
     </div>
