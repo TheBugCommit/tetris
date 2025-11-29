@@ -1,6 +1,7 @@
-import { DB_PATHS, INITIAL_PLAYER_STATS } from "../constants/gameConstants";
+import { DB_PATHS } from "../config/firebase";
 import * as GameStateModel from "../models/GameStateModel";
 import * as AttackModel from "../models/AttackModel";
+import * as PlayerModel from "../models/PlayerModel";
 
 export const buildStartGameUpdates = (playersData) => {
     const updates = {};
@@ -16,7 +17,7 @@ export const buildStartGameUpdates = (playersData) => {
             if (!player.isOnline) {
                 updates[DB_PATHS.player(pid)] = null;
             } else {
-                updates[DB_PATHS.playerStats(pid)] = INITIAL_PLAYER_STATS;
+                updates[DB_PATHS.playerStats(pid)] = PlayerModel.createInitialStats();
             }
         });
     }
@@ -49,6 +50,10 @@ export const buildAttackUpdates = (allPlayers, myPlayerId, myName, lines, idGene
 };
 
 export const mapGameState = (data) => GameStateModel.gameStateFromFirebase(data);
-export const mapPlayersList = (data) => data ? Object.values(data) : [];
-export const mapResultsList = (data) => data ? Object.values(data) : [];
+export const mapPlayersList = (data) => {
+    if (!data) return [];
+    return Object.values(data).map(playerData => 
+        PlayerModel.playerFromFirebase(playerData)
+    );
+};
 export const mapIncomingAttack = (data) => AttackModel.attackFromFirebase(data);

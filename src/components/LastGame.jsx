@@ -13,7 +13,7 @@ const LastGame = () => {
                         {lastResults
                             .sort((a, b) => b.gameStats.lines - a.gameStats.lines)
                             .map((p, index) => (
-                                <li key={p.id + "res"} className={styles.listItem}>
+                                <li key={`${p.id}_${index}`} className={styles.listItem}>
                                     <span>#{index + 1} {p.name}</span>
                                     <span>
                                         Lvl: <strong>{p.gameStats.level}</strong> |

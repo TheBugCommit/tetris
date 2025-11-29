@@ -1,11 +1,11 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import * as gameService from "../services/gameService";
-import { GAME_STATUS, INITIAL_GAME_STATE } from '../constants/gameConstants';
+import * as GameStateModel from '../models/GameStateModel'
 
 const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
-    const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
+    const [gameState, setGameState] = useState(() => GameStateModel.createWaitingState());
     const [players, setPlayers] = useState([]);
 
     useEffect(() => {
@@ -24,9 +24,9 @@ export const RoomProvider = ({ children }) => {
     const setWaitingState = useCallback(() => gameService.setGameToWaiting(), []);
 
     const value = useMemo(() => ({
-        isGamePlaying: gameState.status === GAME_STATUS.PLAYING,
-        isGameOver: gameState.status === GAME_STATUS.GAME_OVER,
-        isWaiting: gameState.status === GAME_STATUS.WAITING,
+        isGamePlaying: gameState.status === GameStateModel.GAME_STATUS.PLAYING,
+        isGameOver: gameState.status === GameStateModel.GAME_STATUS.GAME_OVER,
+        isWaiting: gameState.status === GameStateModel.GAME_STATUS.WAITING,
         isPaused: gameState.isPaused,
         gameState,
         players,

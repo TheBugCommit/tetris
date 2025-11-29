@@ -14,8 +14,8 @@ const getUser = () => {
     }
 }
 
-const setUser = (id, name) => {
-    sessionStorage.setItem(KEYS.USER_SESSION, JSON.stringify({ id, name }));
+const setUser = (user) => {
+    sessionStorage.setItem(KEYS.USER_SESSION, JSON.stringify(user));
 }
 
 const clearUser = () => {

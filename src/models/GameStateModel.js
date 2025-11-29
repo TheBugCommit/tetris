@@ -1,4 +1,8 @@
-import { GAME_STATUS } from "../constants/gameConstants";
+export const GAME_STATUS = {
+    WAITING: "WAITING",
+    PLAYING: "PLAYING",
+    GAME_OVER: "GAME_OVER",
+};
 
 export const createGameState = (status = GAME_STATUS.WAITING, isPaused = false) => ({
     status,

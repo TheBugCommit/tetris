@@ -1,27 +1,32 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import storageService from '../services/storageService'
 import { useRoomConnection } from '../hooks/useRoomConnection';
+import * as PlayerModel from "../models/PlayerModel";
+import { useNotification } from '../hooks/useNotification';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
         const saved = storageService.getUser();
-        return saved || { id: "", name: "" };
+        return saved || PlayerModel.createPlayer("", "", false);
     });
 
-    const isJoined = useRoomConnection(user);
+    const { notification, showNotification } = useNotification();
+    const isJoined = useRoomConnection(user, showNotification);
 
     const setPlayerInfo = useCallback((id, name) => {
-        setUser({ id, name });
-        storageService.setUser(id, name);
+        const newPlayerLocal = PlayerModel.createPlayer(id, name, true);
+        setUser(newPlayerLocal);
+        storageService.setUser(newPlayerLocal);
     }, []);
 
     const value = useMemo(() => ({
         playerId: user.id,
         playerName: user.name,
         isJoined,
-        setPlayerInfo
+        setPlayerInfo,
+        notification
     }), [user, isJoined, setPlayerInfo]);
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

@@ -2,7 +2,7 @@ import { useEffect, useCallback, useRef, useMemo, useState } from 'react';
 import { checkCollision, getMatrix, rotatePieceMath, randomPiece, createGarbageLine } from '../helpers/tetrisHelpers'
 import { ROWS, COLS } from '../constants/tetrisConstants';
 
-const INITIAL_GAME_STATE = {
+const INITIAL_BOARD_STATE = {
     board: Array.from({ length: ROWS }, () => Array(COLS).fill(null)),
     piece: null,
     nextPiece: null
@@ -13,7 +13,7 @@ export const useTetris = ({
     onNextPieceChange, incomingGarbage, onGarbageConsumed
 }) => {
 
-    const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
+    const [gameState, setGameState] = useState(INITIAL_BOARD_STATE);
 
     useEffect(() => {
         if (!gameState.piece || !gameState.nextPiece) {
@@ -126,7 +126,7 @@ export const useTetris = ({
         if (gameOver || paused) return;
         const { piece, board } = stateRef.current;
         if (!piece) return;
-        
+
         let dy = 0;
         while (!checkCollision(board, piece, 0, dy + 1)) dy++;
         

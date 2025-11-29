@@ -2,16 +2,16 @@ import { useMemo, useCallback } from 'react';
 import { useUser } from '../contexts/UserProvider'; 
 import { useRoom } from '../contexts/RoomProvider'; 
 import * as gameService from '../services/gameService'; 
-import { INITIAL_PLAYER_STATS } from '../constants/gameConstants';
+import * as PlayerModel from '../models/PlayerModel'; 
 
 export const usePlayerStats = () => {
     const { playerId, playerName, isJoined } = useUser();
     const { players } = useRoom();
 
     const stats = useMemo(() => {
-        if (!playerId || !players) return INITIAL_PLAYER_STATS;
+        if (!playerId || !players) return PlayerModel.createInitialStats();
         const player = players.find(p => p.id === playerId);
-        return player?.gameStats || INITIAL_PLAYER_STATS;
+        return player?.gameStats || PlayerModel.createInitialStats();
     }, [players, playerId]);
 
     const addLines = useCallback((linesCleared) => {
@@ -20,11 +20,8 @@ export const usePlayerStats = () => {
         gameService.sendAttackToOthers(playerId, playerName, linesCleared, players);
         const newTotalLines = stats.lines + linesCleared;
         const newLevel = Math.floor(newTotalLines / 10) + 1;
-        gameService.updatePlayerStats(playerId, {
-            lines: newTotalLines,
-            level: newLevel
-        });
-
+        const newStats = PlayerModel.createGameStats(newTotalLines, newLevel);
+        gameService.updatePlayerStats(playerId, newStats);
     }, [playerId, playerName, isJoined, players, stats]);
 
     return { 

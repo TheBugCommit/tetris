@@ -1,7 +1,6 @@
-import { ref, onValue, update, off, set, onDisconnect, get, child, onChildAdded, push, remove } from "firebase/database";
-import { db } from "../config/firebase";
+import { ref, onValue, update, off, set, onDisconnect, get, onChildAdded, push, remove } from "firebase/database";
+import { db, DB_PATHS } from "../config/firebase";
 import * as helpers from "../helpers/firebaseHelpers";
-import * as gameConst from '../constants/gameConstants';
 import * as PlayerModel from "../models/PlayerModel";
 
 function createSubscription(path, mapper, callback) {
@@ -12,42 +11,42 @@ function createSubscription(path, mapper, callback) {
 }
 
 export function subscribeToGameState(callback) {
-    return createSubscription(gameConst.DB_PATHS.gameState, helpers.mapGameState, callback);
+    return createSubscription(DB_PATHS.gameState, helpers.mapGameState, callback);
 }
 
 export function subscribeToPlayers(callback) {
-    return createSubscription(gameConst.DB_PATHS.players, helpers.mapPlayersList, callback);
+    return createSubscription(DB_PATHS.players, helpers.mapPlayersList, callback);
 }
 
 export function subscribeToLastResults(callback) {
-    return createSubscription(gameConst.DB_PATHS.lastResults, helpers.mapResultsList, callback);
+    return createSubscription(DB_PATHS.lastResults, helpers.mapPlayersList, callback);
 }
 
 export async function doStartGame() {
-    const snapshot = await get(ref(db, gameConst.DB_PATHS.players));
+    const snapshot = await get(ref(db, DB_PATHS.players));
     if (!snapshot.exists()) return;
     return update(ref(db), helpers.buildStartGameUpdates(snapshot.val()));
 }
 
 export function setGameToWaiting() {
-    return update(ref(db, gameConst.DB_PATHS.gameState), helpers.buildWaitingState());
+    return update(ref(db, DB_PATHS.gameState), helpers.buildWaitingState());
 }
 
 export async function doGameOver() {
     try {
-        const snapshot = await get(ref(db, gameConst.DB_PATHS.players));
+        const snapshot = await get(ref(db, DB_PATHS.players));
         return update(ref(db), helpers.buildGameOverUpdates(snapshot.val()));
     } catch (e) { console.error(e); }
 }
 
 export function togglePause(currentPauseState) {
-    return update(ref(db, gameConst.DB_PATHS.gameState),
+    return update(ref(db, DB_PATHS.gameState),
         { isPaused: !currentPauseState }
     );
 }
 
 export async function joinRoom(playerId, playerName) {
-    const playerRef = ref(db, gameConst.DB_PATHS.player(playerId));
+    const playerRef = ref(db, DB_PATHS.player(playerId));
     const snapshot = await get(playerRef);
 
     onDisconnect(playerRef).update(PlayerModel.getDisconnectPayload());
@@ -61,7 +60,7 @@ export async function joinRoom(playerId, playerName) {
 }
 
 export function updatePlayerStats(playerId, stats) {
-    update(ref(db, gameConst.DB_PATHS.playerStats(playerId)), stats);
+    update(ref(db, DB_PATHS.playerStats(playerId)), stats);
 }
 
 export async function sendAttackToOthers(myId, myName, lines, allPlayers) {
@@ -72,7 +71,7 @@ export async function sendAttackToOthers(myId, myName, lines, allPlayers) {
 }
 
 export function subscribeToIncomingAttacks(myPlayerId, onAttackReceived) {
-    const path = gameConst.DB_PATHS.playerAttacks(myPlayerId);
+    const path = DB_PATHS.playerAttacks(myPlayerId);
 
     const unsub = onChildAdded(ref(db, path), (snapshot) => {
         const attackKey = snapshot.key;
@@ -88,5 +87,5 @@ export function subscribeToIncomingAttacks(myPlayerId, onAttackReceived) {
 }
 
 export function clearGameResults() {
-    set(ref(db, gameConst.DB_PATHS.lastResults), null);
+    set(ref(db, DB_PATHS.lastResults), null);
 }

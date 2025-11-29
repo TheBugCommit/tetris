@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
+import { CONTROLS } from '../constants/tetrisConstants';
 
 export const useLobbyControls = (startGame, isGamePlaying) => {
     useEffect(() => {
         const handleKeyDown = async (e) => {
-            if (e.key === "Enter" && !isGamePlaying) {
+            if (CONTROLS.ENTER.includes(e.key) && !isGamePlaying) {
                 await startGame();
             }
         };

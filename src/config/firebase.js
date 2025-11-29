@@ -11,5 +11,18 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+const ROOT = 'room';
+export const DB_PATHS = {
+    ROOT: ROOT,
+    gameState: `${ROOT}/gameState`,
+    gameStateStatus: `${ROOT}/gameState/status`,
+    gameStateIsPaused: `${ROOT}/gameState/isPaused`,
+    players: `${ROOT}/players`,
+    lastResults: `${ROOT}/lastGameResults`,
+    player: (id) => `${ROOT}/players/${id}`,
+    playerStats: (id) => `${ROOT}/players/${id}/gameStats`,
+    playerAttacks: (id) => `${ROOT}/players/${id}/incomingAttacks`,
+};
+
 const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);

@@ -4,11 +4,12 @@ import { useUser } from "../contexts/UserProvider";
 import styles from './LoginPage.module.css'
 import RecentNames from "../components/RecentNames";
 import { useRecentNames } from "../hooks/useRecentNames";
+import ToastNotification from "../components/ToastNotification";
 
 const LoginPage = () => {
   const inputRef = useRef("");
 
-  const { setPlayerInfo } = useUser();
+  const { setPlayerInfo, notification } = useUser();
   const [_, addName] = useRecentNames();
   const [error, setError] = useState("");
 
@@ -28,23 +29,26 @@ const LoginPage = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>Tetris Multiplayer</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            aria-label="Player Name"
-            className={styles.input}
-            ref={inputRef}
-            placeholder="Enter your name..."
-          />
-          <p className={styles.errorMessage}>{error}</p>
-          <button type="submit" className={styles.button}>Start Game</button>
-        </form>
+    <>
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <h1 className={styles.title}>Tetris Multiplayer</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              aria-label="Player Name"
+              className={styles.input}
+              ref={inputRef}
+              placeholder="Enter your name..."
+            />
+            <p className={styles.errorMessage}>{error}</p>
+            <button type="submit" className={styles.button}>Start Game</button>
+          </form>
 
-        <RecentNames onSelectName={loginUser} />
+          <RecentNames onSelectName={loginUser} />
+        </div>
       </div>
-    </div>
+      <ToastNotification notification={notification} />
+    </>
   );
 };
 

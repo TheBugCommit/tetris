@@ -118,7 +118,8 @@ export const CONTROLS = {
     DOWN: ["ArrowDown", "KeyS"],
     ROTATE: ["ArrowUp", "KeyW"],
     DROP: ["Space"],
-    PAUSE: ["KeyP"]
+    PAUSE: ["KeyP"],
+    ENTER: ["Enter"]
 };
 
 export const MIN_SPEED = 50;
