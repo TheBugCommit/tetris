@@ -1,36 +1,29 @@
-.wrapper {
-    width: 100%;
-}
-
-.header {
-    margin: 0 0 20px 0;
-    font-size: 1rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: #a78bfa;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 10px;
-}
-
 .list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 0;
+    display: flex; flex-direction: column; gap: 8px;
 }
 
 .listItem {
     padding: 12px;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #cbd5e1;
-    font-size: 0.95rem;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text-muted);
+}
+
+.rankNum {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    font-weight: bold;
+    font-size: 1.1em;
+    min-width: 25px;
+}
+
+.name { color: var(--text-main); font-weight: 500; }
+
+.right {
+    font-family: var(--font-mono);
+    color: var(--secondary-color);
+    font-weight: bold;
 }
 
 .left {
@@ -39,31 +32,9 @@
     gap: 12px;
 }
 
-.rankNum {
-    font-family: monospace;
-    font-weight: bold;
-    color: #64748b;
-    font-size: 1.1em;
-    min-width: 25px;
-}
-
-.name {
-    font-weight: 500;
-    color: white;
-}
-
-.right {
-    font-family: monospace;
-    font-weight: bold;
-    color: #a78bfa;
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-}
-
 .label {
     font-size: 0.7em;
-    color: #64748b;
+    color: var(--text-muted);
 }
 
 .empty,
@@ -71,10 +42,10 @@
 .error {
     padding: 20px;
     text-align: center;
-    color: #64748b;
+    color: var(--text-muted);
     font-style: italic;
 }
 
 .error {
-    color: #ef4444;
+    color: var(--danger-color);
 }

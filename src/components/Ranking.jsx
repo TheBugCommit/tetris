@@ -5,17 +5,17 @@ const Ranking = () => {
     const { ranking, loading, error } = useRanking();
 
     const Header = () => (
-        <h3 className={styles.header}>
+        <h3 className="list-header" style={{ color: 'var(--secondary-color)' }}>
             <i className="fa-solid fa-chart-simple"></i> GLOBAL RANKING
         </h3>
     );
 
-    if (error) return <div className={styles.wrapper}><Header/><p className={styles.error}><i className="fa-solid fa-triangle-exclamation"></i> {error}</p></div>;
-    if (loading) return <div className={styles.wrapper}><Header/><p className={styles.loading}><i className="fa-solid fa-spinner fa-spin"></i> Loading...</p></div>;
+    if (error) return <div className={styles.wrapper}><Header /><p className={styles.error}><i className="fa-solid fa-triangle-exclamation"></i> {error}</p></div>;
+    if (loading) return <div className={styles.wrapper}><Header /><p className={styles.loading}><i className="fa-solid fa-spinner fa-spin"></i> Loading...</p></div>;
 
     return (
         <div className={styles.wrapper}>
-            <Header/>
+            <Header />
             <ul className={styles.list}>
                 {ranking.length > 0 ? (
                     ranking.map((record, index) => (

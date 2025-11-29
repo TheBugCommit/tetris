@@ -23,36 +23,37 @@ const LobbyPage = () => {
   useLobbyControls(startGame, isGamePlaying)
 
  return (
-    <div className={styles.container}>
-      <div className={styles.overlay}></div>
+    <div className={`cyber-background ${styles.container}`}>
+      <div className="cyber-overlay"></div>
       
       <header className={styles.header}>
-        <h1 className={styles.mainTitle}>TETRIS <span className={styles.highlight}>MULTIPLAYER</span></h1>
+        <h1 className={`neon-title ${styles.mainTitle}`}>
+            TETRIS <span className={styles.highlight}>MULTIPLAYER</span>
+        </h1>
         
         <div className={styles.statusBox}>
            <div className={`${styles.pulseDot} ${isGameOver ? styles.red : styles.green}`}></div>
            <p>{isGameOver ? "GAME OVER" : "WAITING FOR PLAYERS..."}</p>
         </div>
 
-        <h2 className={styles.blinkTitle}>
-          PRESS <span className={styles.key}>ENTER</span> TO START
+        <h2 className={styles.blinkTitle} style={{color: 'var(--text-muted)', fontSize: '1.2rem'}}>
+          PRESS <span className="key-cap">ENTER</span> TO START
         </h2>
       </header>
 
       <div className={styles.panelsGrid}>
-        <div className={styles.card}>
+        <div className={`glass-panel ${styles.gridItem}`}>
           <PlayerList />
         </div>
         
-        <div className={`${styles.card} ${styles.centerCard}`}>
+        <div className={`glass-panel ${styles.gridItem} ${styles.centerCard}`}>
           <LastGame />
         </div>
         
-        <div className={styles.card}>
+        <div className={`glass-panel ${styles.gridItem}`}>
           <Ranking />
         </div>
       </div>
-
     </div>
   );
 };

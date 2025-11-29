@@ -37,8 +37,8 @@ const TetrisPage = () => {
     const showModal = isPaused || visualGameOver;
 
     return (
-        <div className={styles.layout}>
-            <div className={styles.overlay}></div>
+        <div className={`cyber-background ${styles.layout}`}>
+            <div class="cyber-overlay"></div>
 
             {showModal && (
                 <div className={styles.modalOverlay}>
@@ -62,11 +62,11 @@ const TetrisPage = () => {
                 </div>
                 <div className={`${styles.hudCard} ${styles.controlsCard}`}>
                     <div className={styles.controlsHelp}>
-                        <p><span className={styles.key}><i class="fa-solid fa-arrows-left-right"></i></span> Move</p>
-                        <p><span className={styles.key}><i class="fa-solid fa-arrow-up"></i></span> Rotate</p>
-                        <p><span className={styles.key}><i class="fa-solid fa-arrow-down"></i></span> Drop</p>
+                        <p><span class="key-cap"><i class="fa-solid fa-arrows-left-right"></i></span> Move</p>
+                        <p><span class="key-cap"><i class="fa-solid fa-arrow-up"></i></span> Rotate</p>
+                        <p><span class="key-cap"><i class="fa-solid fa-arrow-down"></i></span> Drop</p>
                         <p>
-                            <span className={styles.key}>
+                            <span class="key-cap">
                                 <i class="fa-solid fa-s"></i>
                                 <i class="fa-solid fa-p"></i>
                                 <i class="fa-solid fa-a"></i>
@@ -75,13 +75,13 @@ const TetrisPage = () => {
                             </span>
                             Hard Drop
                         </p>
-                        <p><span className={styles.key}><i class="fa-solid fa-p"></i></span> Pause</p>
+                        <p><span class="key-cap"><i class="fa-solid fa-p"></i></span> Pause</p>
                     </div>
                 </div>
             </div>
 
             <div className={styles.gameSection}>
-                <h1 className={styles.title}>TETRIS</h1>
+                <h1 className={`neon-title ${styles.title}`}>TETRIS</h1>
 
                 <div className={styles.boardFrame}>
                     <TetrisBoard board={renderBoard} />
