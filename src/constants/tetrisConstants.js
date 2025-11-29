@@ -110,3 +110,16 @@ export const COLORS = {
     Z: "red",
     G: "grey"
 };
+
+
+export const CONTROLS = {
+    LEFT: ["ArrowLeft", "KeyA"],
+    RIGHT: ["ArrowRight", "KeyD"],
+    DOWN: ["ArrowDown", "KeyS"],
+    ROTATE: ["ArrowUp", "KeyW"],
+    DROP: ["Space"],
+    PAUSE: ["KeyP"]
+};
+
+export const MIN_SPEED = 50;
+export const SPEED_DECAY_FACTOR = 0.9;

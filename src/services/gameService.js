@@ -71,7 +71,7 @@ export function updatePlayerStats(playerId, stats) {
 // --- ESCRITURA (ATTACKS) ---
 export async function sendAttackToOthers(myId, myName, lines, allPlayers) {
     if (!allPlayers || lines <= 0) return;
-    const keyGen = () => push(child(ref(db), 'ignored')).key;
+    const keyGen = () => push(ref(db)).key;
     const updates = helpers.buildAttackUpdates(allPlayers, myId, myName, lines, keyGen);
     return update(ref(db), updates);
 }

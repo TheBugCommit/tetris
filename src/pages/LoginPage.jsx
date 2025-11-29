@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from "../contexts/UserProvider";
 import styles from './LoginPage.module.css'
@@ -7,9 +7,10 @@ import { useRecentNames } from "../hooks/useRecentNames";
 
 const LoginPage = () => {
   const inputRef = useRef("");
-  
-  const { setPlayerInfo, isJoined } = useUser();
+
+  const { setPlayerInfo } = useUser();
   const [_, addName] = useRecentNames();
+  const [error, setError] = useState("");
 
   const loginUser = (name) => {
     if (!name) return;
@@ -22,7 +23,7 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const val = inputRef.current.value.trim();
-    if (!val) return;
+    setError(!val || val.length < 3 ? "Name must be at least 3 charaters" : "")
     loginUser(val);
   };
 
@@ -36,6 +37,7 @@ const LoginPage = () => {
             ref={inputRef}
             placeholder="Enter your name..."
           />
+          <p>{error}</p>
           <button type="submit" className={styles.button}>Start Game</button>
         </form>
 

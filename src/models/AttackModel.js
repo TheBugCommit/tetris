@@ -2,7 +2,6 @@ export class AttackModel {
     constructor(senderName, lines) {
         this.sender = senderName;
         this.lines = lines;
-        this.timestamp = Date.now();
     }
 
     static fromFirebase(data) {
@@ -17,7 +16,6 @@ export class AttackModel {
         return {
             sender: this.sender,
             lines: this.lines,
-            timestamp: this.timestamp
         };
     }
 }

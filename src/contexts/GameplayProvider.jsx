@@ -1,11 +1,10 @@
-import { createContext, useContext, useEffect, useCallback, useMemo, useReducer, useState } from 'react';
-import * as gameService from "../services/gameService";
+import { createContext, useContext, useMemo } from 'react';
 import { useUser } from './UserProvider'
 import { useRoom } from './RoomProvider';
-import rankingService from "../services/rankingService";
-import { SPEED } from '../constants/tetrisConstants';
 import { usePlayerStats } from '../hooks/usePlayerStats';
 import { useGameAttacks } from '../hooks/useGameAttacks';
+import { MIN_SPEED, SPEED_DECAY_FACTOR, SPEED } from '../constants/tetrisConstants';
+import { useScoreSubmission } from '../hooks/useScoreSubmission';
 
 const GameplayContext = createContext();
 
@@ -20,34 +19,10 @@ export const GameplayProvider = ({ children }) => {
 
     const { stats: playerGameStats, addLines: setLines } = usePlayerStats();
     const { garbagePending, notification, consumeGarbage } = useGameAttacks(playerId, isJoined, isGamePlaying)
-    const [speed, setSpeed] = useState(SPEED)
+    const speed = useMemo(() => Math.max(MIN_SPEED, SPEED * Math.pow(SPEED_DECAY_FACTOR, playerGameStats.level - 1))
+        , [playerGameStats.level]);
 
-    useEffect(() => {
-        setSpeed((s) => Math.max(50, SPEED * Math.pow(0.9, playerGameStats.level - 1)))
-    }, [playerGameStats.level])
-
-    useEffect(() => {
-        const alreadySubmitted = sessionStorage.getItem("score_submitted");
-
-        if (isGameOver && playerGameStats && !alreadySubmitted) {
-            (async () => {
-                try {
-                    sessionStorage.setItem("score_submitted", "true");
-
-                    await rankingService.postRanking({
-                        playerName: playerName,
-                        level: playerGameStats.level,
-                        lines: playerGameStats.lines
-                    });
-
-                } catch (error) {
-                    sessionStorage.removeItem("score_submitted");
-                }
-            })();
-        } else if (isGamePlaying) {
-            sessionStorage.removeItem("score_submitted")
-        }
-    }, [isGameOver, isGamePlaying])
+    useScoreSubmission(isGameOver, isGamePlaying, playerGameStats, playerName);
 
     const value = useMemo(() => ({
         playerGameStats,

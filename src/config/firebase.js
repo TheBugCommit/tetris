@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCoyINXNLfUw_Pw3nMaq02nXJP44mtkCxQ",
-  authDomain: "game-6d5e9.firebaseapp.com",
-  databaseURL: "https://game-6d5e9.firebaseio.com",
-  projectId: "game-6d5e9",
-  storageBucket: "game-6d5e9.firebasestorage.app",
-  messagingSenderId: "857074869808",
-  appId: "1:857074869808:web:508a75fe2f1adb512a2ff5"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DB_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);

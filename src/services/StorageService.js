@@ -1,6 +1,7 @@
 const KEYS = {
     USER_SESSION: 'tetris_user_session',
     RECENT_NAMES: 'tetris_recent_names',
+    SCORE_SUBMITTED: 'tetris_score_submitted'
 };
 
 const getUser = () => {
@@ -39,12 +40,27 @@ const addRecentName = (name) => {
     return newNames;
 }
 
+const getScoreSubmitted = () => {
+    return sessionStorage.getItem(KEYS.SCORE_SUBMITTED) === 'true';
+};
+
+const setScoreSubmitted = () => {
+    sessionStorage.setItem(KEYS.SCORE_SUBMITTED, 'true');
+};
+
+const clearScoreSubmitted = () => {
+    sessionStorage.removeItem(KEYS.SCORE_SUBMITTED);
+};
+
 const StorageService = {
     getUser,
     setUser,
     clearUser,
     getRecentNames,
     addRecentName,
+    getScoreSubmitted,
+    setScoreSubmitted,
+    clearScoreSubmitted
 };
 
 export default StorageService;

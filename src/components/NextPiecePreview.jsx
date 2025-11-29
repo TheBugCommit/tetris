@@ -1,18 +1,17 @@
+import { useMemo } from "react";
 import { SHAPES, COLORS } from "../constants/tetrisConstants";
 import styles from './NextPiecePreview.module.css'
 
 const NextPiecePreview = ({ piece }) => {
-    const grid = Array.from({ length: 3 }, () => Array(4).fill(0));
+    const grid = useMemo(() => {
+        const newGrid = Array.from({ length: 3 }, () => Array(4).fill(0));
+        if (!piece) return newGrid;
 
-    if (piece) {
-        const shape = SHAPES[piece.type][0]; // Rotación 0
+        const shape = SHAPES[piece.type][0];
 
-        // Calculamos el offset para centrar la pieza
-        // La pieza 'I' (4 de ancho) necesita offset 0. La 'O' (2 de ancho) necesita offset 1.
         const offsetX = piece.type === 'O' ? 1 : (piece.type === 'I' ? 0 : 0.5);
         const startX = Math.floor(offsetX);
 
-        // Offset Y: Bajamos la 'I' un poco para que no toque el techo si quieres
         const startY = piece.type === 'I' ? 0 : 0;
 
         shape.forEach((row, y) => {
@@ -20,14 +19,15 @@ const NextPiecePreview = ({ piece }) => {
                 if (value) {
                     const ny = y + startY;
                     const nx = x + startX;
-                    // Solo pintamos si está dentro de nuestra miniceldas (3x4)
-                    if (grid[ny] && grid[ny][nx] !== undefined) {
-                        grid[ny][nx] = piece.type;
+                    if (newGrid[ny] && newGrid[ny][nx] !== undefined) {
+                        newGrid[ny][nx] = piece.type;
                     }
                 }
             });
         });
-    }
+
+        return newGrid
+    }, [piece])
 
     return (
         <div className={styles.section}>
