@@ -21,9 +21,29 @@
 .name { color: var(--text-main); font-weight: 500; }
 
 .right {
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+}
+
+.statGroup {
+    display: flex;
+    align-items: baseline; 
+    gap: 6px; 
+}
+
+.label {
+    font-size: 0.7em;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.value {
     font-family: var(--font-mono);
     color: var(--secondary-color);
     font-weight: bold;
+    font-size: 1rem;
 }
 
 .left {

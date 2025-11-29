@@ -25,7 +25,14 @@ const Ranking = () => {
                                 <span className={styles.name}>{record.playerName}</span>
                             </div>
                             <div className={styles.right}>
-                                {record.totalLines} <span className={styles.label}>LINES</span>
+                                <div className={styles.statGroup}>
+                                    <span className={styles.label}>LVL</span>
+                                    <span className={styles.value}>{record.level}</span>
+                                </div>
+                                <div className={styles.statGroup}>
+                                    <span className={styles.label}>LINES</span>
+                                    <span className={styles.value}>{record.totalLines}</span>
+                                </div>
                             </div>
                         </li>
                     ))
