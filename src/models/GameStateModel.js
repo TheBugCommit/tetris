@@ -1,27 +1,14 @@
 import { GAME_STATUS } from "../constants/gameConstants";
 
-export class GameStateModel {
-    constructor(status = GAME_STATUS.WAITING, isPaused = false) {
-        this.status = status;
-        this.isPaused = isPaused;
-    }
+export const createGameState = (status = GAME_STATUS.WAITING, isPaused = false) => ({
+    status,
+    isPaused
+});
 
-    static createWaiting() {
-        return new GameStateModel(GAME_STATUS.WAITING, false);
-    }
+export const createWaitingState = () => createGameState(GAME_STATUS.WAITING, false);
+export const createPlayingState = () => createGameState(GAME_STATUS.PLAYING, false);
+export const createGameOverState = () => createGameState(GAME_STATUS.GAME_OVER, true);
 
-    static createPlaying() {
-        return new GameStateModel(GAME_STATUS.PLAYING, false);
-    }
-
-    static createGameOver() {
-        return new GameStateModel(GAME_STATUS.GAME_OVER, true);
-    }
-
-    toFirebase() {
-        return {
-            status: this.status,
-            isPaused: this.isPaused
-        };
-    }
-}
+export const gameStateFromFirebase = (data) => {
+    return data || createWaitingState();
+};

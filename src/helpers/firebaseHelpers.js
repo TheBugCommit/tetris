@@ -1,19 +1,15 @@
 import { DB_PATHS, INITIAL_PLAYER_STATS } from "../constants/gameConstants";
-import { GameStateModel } from "../models/GameStateModel";
-import { AttackModel } from "../models/AttackModel";
-
-// --- BUILDERS DE ACTUALIZACIÓN COMPLEJA ---
+import * as GameStateModel from "../models/GameStateModel";
+import * as AttackModel from "../models/AttackModel";
 
 export const buildStartGameUpdates = (playersData) => {
     const updates = {};
-    const playingState = GameStateModel.createPlaying().toFirebase();
+    const gameState = GameStateModel.createPlayingState()
 
-    // 1. Estado Global
-    updates[`${DB_PATHS.gameState}/status`] = playingState.status;
-    updates[`${DB_PATHS.gameState}/isPaused`] = playingState.isPaused;
+    updates[`${DB_PATHS.gameState}/status`] = gameState.status;
+    updates[`${DB_PATHS.gameState}/isPaused`] = gameState.isPaused;
     updates[DB_PATHS.lastResults] = null;
 
-    // 2. Jugadores (Reset)
     if (playersData) {
         Object.keys(playersData).forEach(pid => {
             const player = playersData[pid];
@@ -29,20 +25,19 @@ export const buildStartGameUpdates = (playersData) => {
 
 export const buildGameOverUpdates = (playersData) => {
     const updates = {};
-    updates[DB_PATHS.gameState] = GameStateModel.createGameOver().toFirebase();
-    
+    updates[DB_PATHS.gameState] = GameStateModel.createGameOverState()
+
     if (playersData) {
         updates[DB_PATHS.lastResults] = playersData;
     }
     return updates;
 };
 
-export const buildWaitingState = () => GameStateModel.createWaiting().toFirebase();
+export const buildWaitingState = () => GameStateModel.createWaitingState()
 
 export const buildAttackUpdates = (allPlayers, myPlayerId, myName, lines, idGenerator) => {
     const updates = {};
-    const attackPayload = new AttackModel(myName, lines).toFirebase();
-
+    const attackPayload = AttackModel.createAttack(myName, lines);
     allPlayers.forEach(player => {
         if (player.id !== myPlayerId && player.isOnline) {
             const newKey = idGenerator();
@@ -53,9 +48,7 @@ export const buildAttackUpdates = (allPlayers, myPlayerId, myName, lines, idGene
     return updates;
 };
 
-// --- MAPPERS PARA SUSCRIPCIONES ---
-export const mapGameState = (data) => data || GameStateModel.createWaiting().toFirebase();
+export const mapGameState = (data) => GameStateModel.gameStateFromFirebase(data);
 export const mapPlayersList = (data) => data ? Object.values(data) : [];
 export const mapResultsList = (data) => data ? Object.values(data) : [];
-// Attack usa el modelo directamente para limpiar datos
-export const mapIncomingAttack = (data) => AttackModel.fromFirebase(data);
+export const mapIncomingAttack = (data) => AttackModel.attackFromFirebase(data);

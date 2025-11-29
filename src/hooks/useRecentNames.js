@@ -1,11 +1,11 @@
 import { useState } from "react";
-import StorageService from "../services/StorageService";
+import storageService from "../services/storageService";
 
 export const useRecentNames = () => {
-    const [names, setNames] = useState(() => StorageService.getRecentNames());
+    const [names, setNames] = useState(() => storageService.getRecentNames());
 
     const addName = (name) => {
-        const updatedList = StorageService.addRecentName(name);
+        const updatedList = storageService.addRecentName(name);
         setNames(updatedList);
     };
 

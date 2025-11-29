@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import StorageService from '../services/StorageService'
+import storageService from '../services/storageService'
 import { useRoomConnection } from '../hooks/useRoomConnection';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
-        const saved = StorageService.getUser();
+        const saved = storageService.getUser();
         return saved || { id: "", name: "" };
     });
 
@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
 
     const setPlayerInfo = useCallback((id, name) => {
         setUser({ id, name });
-        StorageService.setUser(id, name);
+        storageService.setUser(id, name);
     }, []);
 
     const value = useMemo(() => ({

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
 import TetrisBoard from '../components/TetrisBoard';
 import PlayerList from '../components/PlayerList';
 import NextPiecePreview from '../components/NextPiecePreview';
-import ToastManager from '../components/ToastManager';
+import ToastNotification from '../components/ToastNotification';
 import { useGameplay } from '../contexts/GameplayProvider';
 import { useRoom } from '../contexts/RoomProvider';
 import { useGameOverRedirect } from '../hooks/useGameOverRedirect';
@@ -71,7 +70,7 @@ const TetrisPage = () => {
 
                 <PlayerList />
             </div>
-            <ToastManager notification={notification} />
+            <ToastNotification notification={notification} />
         </div>
     )
 };

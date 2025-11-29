@@ -2,9 +2,8 @@ import { ref, onValue, update, off, set, onDisconnect, get, child, onChildAdded,
 import { db } from "../config/firebase";
 import * as helpers from "../helpers/firebaseHelpers";
 import * as gameConst from '../constants/gameConstants';
-import { PlayerModel } from "../models/PlayerModel";
+import * as PlayerModel from "../models/PlayerModel";
 
-// --- UTILIDAD DE SUSCRIPCIÓN ---
 function createSubscription(path, mapper, callback) {
     const dbRef = ref(db, path);
     const handleData = (snapshot) => callback(mapper(snapshot.val()));
@@ -12,7 +11,6 @@ function createSubscription(path, mapper, callback) {
     return () => off(dbRef, "value", handleData);
 }
 
-// --- LECTURA ---
 export function subscribeToGameState(callback) {
     return createSubscription(gameConst.DB_PATHS.gameState, helpers.mapGameState, callback);
 }
@@ -25,7 +23,6 @@ export function subscribeToLastResults(callback) {
     return createSubscription(gameConst.DB_PATHS.lastResults, helpers.mapResultsList, callback);
 }
 
-// --- ESCRITURA (GAME FLOW) ---
 export async function doStartGame() {
     const snapshot = await get(ref(db, gameConst.DB_PATHS.players));
     if (!snapshot.exists()) return;
@@ -49,7 +46,6 @@ export function togglePause(currentPauseState) {
     );
 }
 
-// --- ESCRITURA (PLAYER) ---
 export async function joinRoom(playerId, playerName) {
     const playerRef = ref(db, gameConst.DB_PATHS.player(playerId));
     const snapshot = await get(playerRef);
@@ -59,8 +55,8 @@ export async function joinRoom(playerId, playerName) {
     if (snapshot.exists()) {
         return update(playerRef, PlayerModel.getReconnectPayload());
     } else {
-        const newPlayer = PlayerModel.createNew(playerId, playerName);
-        return update(playerRef, newPlayer.toFirebase());
+        const newPlayer = PlayerModel.createPlayer(playerId, playerName);
+        return update(playerRef, newPlayer);
     }
 }
 
@@ -68,7 +64,6 @@ export function updatePlayerStats(playerId, stats) {
     update(ref(db, gameConst.DB_PATHS.playerStats(playerId)), stats);
 }
 
-// --- ESCRITURA (ATTACKS) ---
 export async function sendAttackToOthers(myId, myName, lines, allPlayers) {
     if (!allPlayers || lines <= 0) return;
     const keyGen = () => push(ref(db)).key;

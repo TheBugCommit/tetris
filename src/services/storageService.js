@@ -32,7 +32,7 @@ const getRecentNames = () => {
 }
 
 const addRecentName = (name) => {
-    const currentNames = StorageService.getRecentNames();
+    const currentNames = storageService.getRecentNames();
 
     const newNames = [name, ...currentNames.filter(n => n !== name)].slice(0, 5);
 
@@ -52,7 +52,7 @@ const clearScoreSubmitted = () => {
     sessionStorage.removeItem(KEYS.SCORE_SUBMITTED);
 };
 
-const StorageService = {
+const storageService = {
     getUser,
     setUser,
     clearUser,
@@ -63,4 +63,4 @@ const StorageService = {
     clearScoreSubmitted
 };
 
-export default StorageService;
+export default storageService;

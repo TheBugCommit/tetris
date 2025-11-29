@@ -5,24 +5,21 @@ import { usePlayerStats } from '../hooks/usePlayerStats';
 import { useGameAttacks } from '../hooks/useGameAttacks';
 import { MIN_SPEED, SPEED_DECAY_FACTOR, SPEED } from '../constants/tetrisConstants';
 import { useScoreSubmission } from '../hooks/useScoreSubmission';
+import { useNotification } from '../hooks/useNotification';
 
 const GameplayContext = createContext();
-
-// TODO: Arreglar models del servie
-// TODO_ arreglar css
-// TODO: Arreglar nomenclatura
-// TODO: Arreglar moles practiques
 
 export const GameplayProvider = ({ children }) => {
     const { playerId, playerName, isJoined } = useUser();
     const { isGameOver, isGamePlaying } = useRoom();
 
     const { stats: playerGameStats, addLines: setLines } = usePlayerStats();
-    const { garbagePending, notification, consumeGarbage } = useGameAttacks(playerId, isJoined, isGamePlaying)
+    const { notification, showNotification } = useNotification();
+    const { garbagePending, consumeGarbage } = useGameAttacks(playerId, isJoined, isGamePlaying, showNotification)
     const speed = useMemo(() => Math.max(MIN_SPEED, SPEED * Math.pow(SPEED_DECAY_FACTOR, playerGameStats.level - 1))
         , [playerGameStats.level]);
 
-    useScoreSubmission(isGameOver, isGamePlaying, playerGameStats, playerName);
+    useScoreSubmission(isGameOver, isGamePlaying, playerGameStats, playerName, showNotification);
 
     const value = useMemo(() => ({
         playerGameStats,

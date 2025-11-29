@@ -1,28 +1,29 @@
 import { useEffect } from 'react';
 import rankingService from "../services/rankingService";
-import StorageService from "../services/StorageService";
+import storageService from "../services/storageService";
 
-export const useScoreSubmission = (isGameOver, isGamePlaying, playerGameStats, playerName) => {
+export const useScoreSubmission = (isGameOver, isGamePlaying, playerGameStats, playerName, showNotification) => {
     
     useEffect(() => {
-        const alreadySubmitted = StorageService.getScoreSubmitted();
+        const alreadySubmitted = storageService.getScoreSubmitted();
 
         if (isGamePlaying) {
-            StorageService.clearScoreSubmitted();
+            storageService.clearScoreSubmitted();
             return;
         }
 
         if (isGameOver && playerGameStats.lines > 0 && !alreadySubmitted) {
             const submitScore = async () => {
                 try {
-                    StorageService.setScoreSubmitted();
+                    storageService.setScoreSubmitted();
                     await rankingService.postRanking({
                         playerName: playerName,
                         level: playerGameStats.level,
                         lines: playerGameStats.lines
                     });
                 } catch (error) {
-                    StorageService.clearScoreSubmitted();
+                    showNotification("Error saving score. Check internet.", "error");
+                    storageService.clearScoreSubmitted();
                 }
             };
 

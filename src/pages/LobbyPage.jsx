@@ -39,6 +39,7 @@ const LobbyPage = () => {
           <Ranking />
         </div>
       </div>
+
     </div>
   );
 };
