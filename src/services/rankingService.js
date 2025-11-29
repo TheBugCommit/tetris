@@ -4,8 +4,7 @@ const getRanking = async () => {
     try {
         return await apiService.get('/ranking')
     } catch (error) {
-        console.error(error);
-        return [];
+        throw new Error("Error getting global ranking")
     }
 };
 
@@ -18,7 +17,7 @@ const postRanking = async ({playerName, level, lines}) => {
         }
         const response = await apiService.post('/ranking', data)
     } catch (error) {
-        console.error(error);
+        throw new Error("Error sending ranking")
     }
 };
 

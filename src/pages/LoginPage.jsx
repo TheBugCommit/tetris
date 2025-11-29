@@ -33,11 +33,12 @@ const LoginPage = () => {
         <h1 className={styles.title}>Tetris Multiplayer</h1>
         <form onSubmit={handleSubmit}>
           <input
+            aria-label="Player Name"
             className={styles.input}
             ref={inputRef}
             placeholder="Enter your name..."
           />
-          <p>{error}</p>
+          <p className={styles.errorMessage}>{error}</p>
           <button type="submit" className={styles.button}>Start Game</button>
         </form>
 

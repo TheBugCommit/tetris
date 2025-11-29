@@ -33,3 +33,11 @@
     color: #94a3b8;
     font-style: italic;
 }
+
+.error {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 20px;
+    font-weight: bold;
+}

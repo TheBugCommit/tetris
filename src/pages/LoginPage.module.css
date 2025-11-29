@@ -63,3 +63,11 @@
 .button:active {
     transform: scale(0.98);
 }
+
+.error {
+    color: var(--danger-color); 
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 20px;
+    font-weight: bold;
+}

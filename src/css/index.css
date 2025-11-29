@@ -56,3 +56,11 @@ ul { list-style: none; padding: 0; margin: 0; }
 .panel h3:first-child {
     margin-top: 0;
 }
+
+.errorMessage {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 20px;
+    font-weight: bold;
+}
