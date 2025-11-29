@@ -10,6 +10,20 @@ const Ranking = () => {
         </h3>
     );
 
+    const getRankClass = (index) => {
+        if (index === 0) return styles.rankFirst;
+        if (index === 1) return styles.rankSecond;
+        if (index === 2) return styles.rankThird;
+        return "";
+    };
+
+    const getRankIcon = (index) => {
+        if (index === 0) return <i className="fa-solid fa-trophy"></i>;
+        if (index === 1) return <i className="fa-solid fa-medal"></i>;
+        if (index === 2) return <i className="fa-solid fa-medal"></i>;
+        return <span>{index + 1}.</span>;
+    };
+
     if (error) return <div className={styles.wrapper}><Header /><p className={styles.error}><i className="fa-solid fa-triangle-exclamation"></i> {error}</p></div>;
     if (loading) return <div className={styles.wrapper}><Header /><p className={styles.loading}><i className="fa-solid fa-spinner fa-spin"></i> Loading...</p></div>;
 
@@ -19,19 +33,23 @@ const Ranking = () => {
             <ul className={styles.list}>
                 {ranking.length > 0 ? (
                     ranking.map((record, index) => (
-                        <li key={`${record.playerName}-${index}`} className={styles.listItem}>
+                        <li key={`${record.playerName}-${index}`} 
+                        className={`${styles.listItem} ${getRankClass(index)}`}>
                             <div className={styles.left}>
-                                <span className={styles.rankNum}>{index + 1}.</span>
+                                <span className={styles.rankNum}>
+                                    {getRankIcon(index)}
+                                </span>
                                 <span className={styles.name}>{record.playerName}</span>
                             </div>
+                            
                             <div className={styles.right}>
-                                <div className={styles.statGroup}>
-                                    <span className={styles.label}>LVL</span>
-                                    <span className={styles.value}>{record.level}</span>
-                                </div>
-                                <div className={styles.statGroup}>
-                                    <span className={styles.label}>LINES</span>
-                                    <span className={styles.value}>{record.totalLines}</span>
+                                <div className={styles.stats}>
+                                    <span className={styles.pill}>
+                                        <i className="fa-solid fa-layer-group"></i> {record.totalLines}
+                                    </span>
+                                    <span className={styles.pill}>
+                                        <i className="fa-solid fa-angles-up"></i> {record.level}
+                                    </span>
                                 </div>
                             </div>
                         </li>
