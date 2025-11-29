@@ -29,46 +29,81 @@ const TetrisPage = () => {
 
     useKeyboardControls(
         { ...actions, togglePause },
-        !isGameOver, 
+        !isGameOver,
         isPaused
     );
 
-    const renderBoard = getRenderBoard(); 
+    const renderBoard = getRenderBoard();
+    const showModal = isPaused || visualGameOver;
 
     return (
         <div className={styles.layout}>
-            <div className={styles.gameSection}>
-                <h1 className={styles.title}>Tetris</h1>
-                <TetrisBoard board={renderBoard} />
+            <div className={styles.overlay}></div>
+
+            {showModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={`${styles.modalBox} ${visualGameOver ? styles.modalGameOver : styles.modalPaused}`}>
+                        <h2 className={styles.modalTitle}>
+                            {visualGameOver ? "GAME OVER" : "PAUSED"}
+                        </h2>
+                        {visualGameOver && (
+                            <div className={styles.countDown}>{countDown}</div>
+                        )}
+                        {!visualGameOver && (
+                            <p className={styles.modalSubtitle}>PRESS 'P' TO RESUME</p>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            <div className={styles.leftPanel}>
+                <div className={styles.hudCard}>
+                    <PlayerList />
+                </div>
+                <div className={`${styles.hudCard} ${styles.controlsCard}`}>
+                    <div className={styles.controlsHelp}>
+                        <p><span className={styles.key}><i class="fa-solid fa-arrows-left-right"></i></span> Move</p>
+                        <p><span className={styles.key}><i class="fa-solid fa-arrow-up"></i></span> Rotate</p>
+                        <p><span className={styles.key}><i class="fa-solid fa-arrow-down"></i></span> Drop</p>
+                        <p>
+                            <span className={styles.key}>
+                                <i class="fa-solid fa-s"></i>
+                                <i class="fa-solid fa-p"></i>
+                                <i class="fa-solid fa-a"></i>
+                                <i class="fa-solid fa-c"></i>
+                                <i class="fa-solid fa-e"></i>
+                            </span>
+                            Hard Drop
+                        </p>
+                        <p><span className={styles.key}><i class="fa-solid fa-p"></i></span> Pause</p>
+                    </div>
+                </div>
             </div>
-            <div className={styles.panel}>
-                {isPaused && !visualGameOver && <div className={`${styles.banner} ${styles.paused}`}>PAUSED</div>}
-                {visualGameOver && 
-                    <div className={`${styles.banner} ${styles.gameOver}`}>
-                        GAME OVER
-                        {countDown !== null && <span>({countDown})</span>}    
-                    </div>}
 
-                <NextPiecePreview piece={nextPiece} />
+            <div className={styles.gameSection}>
+                <h1 className={styles.title}>TETRIS</h1>
 
-                <div className={styles.statBox}>
-                    <div className={styles.statLabel}>Lines</div>
-                    <div className={styles.statValue}>{lines}</div>
+                <div className={styles.boardFrame}>
+                    <TetrisBoard board={renderBoard} />
+                    <div className={styles.boardGlow}></div>
                 </div>
-                <div className={styles.statBox}>
-                    <div className={styles.statLabel}>Level</div>
-                    <div className={styles.statValue}>{level}</div>
+            </div>
+
+            <div className={styles.rightPanel}>
+                <div className={styles.hudCard}>
+                    <NextPiecePreview piece={nextPiece} />
                 </div>
 
-                <div className={styles.controlsHelp}>
-                    <p><span className={styles.key}>← →</span> Move</p>
-                    <p><span className={styles.key}>↑</span> Rotate</p>
-                    <p><span className={styles.key}>↓</span> Drop</p>
-                    <p><span className={styles.key}>Space</span> Hard drop</p>
-                    <p><span className={styles.key}>P</span> Pause</p>
+                <div className={styles.statsGrid}>
+                    <div className={styles.statBox}>
+                        <div className={styles.statLabel}>LINES</div>
+                        <div className={styles.statValue}>{lines}</div>
+                    </div>
+                    <div className={styles.statBox}>
+                        <div className={styles.statLabel}>LEVEL</div>
+                        <div className={styles.statValue}>{level}</div>
+                    </div>
                 </div>
-
-                <PlayerList />
             </div>
             <ToastNotification notification={notification} />
         </div>

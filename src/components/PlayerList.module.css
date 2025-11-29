@@ -1,42 +1,79 @@
-.header {
-    margin: 20px 0 10px 0;
-    font-size: 16px;
-    text-transform: uppercase;
-    color: #94a3b8;
-    border-bottom: 2px solid #334155;
-    padding-bottom: 5px;
-}
-
-.list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.wrapper {
     width: 100%;
 }
 
+.header {
+    margin: 0 0 20px 0;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 10px;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 .listItem {
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 14px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    border-left: 3px solid transparent;
+    transition: background 0.2s;
 }
 
-.listItem:last-child {
-    border-bottom: none;
-}
-
-.currentUser {
-    color: #4ade80;
+.meItem {
+    background: rgba(59, 130, 246, 0.1);
+    border-left-color: #3b82f6;
+    color: white;
     font-weight: bold;
 }
 
-.otherUser {
-    color: white;
+.nameGroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.offline {
-    color: gray;
-    font-size: 0.8em;
+.statusOnline {
+    color: #4ade80; 
+    font-size: 10px;
+    filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.6));
+    animation: pulseStatus 2s infinite;
+}
+
+.statusOffline {
+    color: #de4a4a; 
+    filter: drop-shadow(0 0 4px rgba(222, 74, 74, 0.6));
+    font-size: 14px;
+}
+
+.empty {
+    padding: 15px;
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+}
+
+@keyframes pulseStatus {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }

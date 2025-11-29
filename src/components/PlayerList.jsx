@@ -7,23 +7,29 @@ const PlayerList = () => {
     const { players } = useRoom();
     
     return (
-        <div className="panel">
+        <div className={styles.wrapper}>
             <h3 className={styles.header}>
-                👥 Players Connected ({players.length})
+                <i className="fa-solid fa-users"></i> CONNECTED ({players.length})
             </h3>
             <ul className={styles.list}>
                 {players.map((p) => {
                     const isMe = p.id === playerId;
                     return (
-                        <li key={p.id} className={styles.listItem}>
-                            <span className={isMe ? styles.currentUser : styles.otherUser}>
-                                {p.name} {isMe && "(Tu)"}
-                            </span>
-                            {!p.isOnline && <span className={styles.offline}>(Disconnected)</span>}
+                        <li key={p.id} className={`${styles.listItem} ${isMe ? styles.meItem : ''}`}>
+                            <div className={styles.nameGroup}>
+                                <i className={`fa-solid ${isMe ? 'fa-user-astronaut' : 'fa-user'}`}></i>
+                                <span>{p.name} {isMe && "(YOU)"}</span>
+                            </div>
+                            <div className={styles.status}>
+                                {p.isOnline 
+                                    ? <i className={`fa-solid fa-circle ${styles.statusOnline}`}></i>
+                                    : <i className={`fa-regular fa-circle-xmark ${styles.statusOffline}`}></i>
+                                }
+                            </div>
                         </li>
                     );
                 })}
-                {players.length === 0 && <li className={styles.listItem}>Waiting connections...</li>}
+                {players.length === 0 && <li className={styles.empty}>Waiting connections...</li>}
             </ul>
         </div>
     );

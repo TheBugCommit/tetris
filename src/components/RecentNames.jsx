@@ -8,7 +8,7 @@ const RecentNames = ({ onSelectName }) => {
 
     return (
         <div className={styles.container}>
-            <p className={styles.label}>Previous Names:</p>
+            <p className={styles.label}><i className="fa-solid fa-clock-rotate-left"></i> RECENT LOGIN:</p>
             <div className={styles.list}>
                 {names.map((n, i) => (
                     <button

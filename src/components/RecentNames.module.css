@@ -1,36 +1,41 @@
 .container {
-    margin-top: 20px;
-    padding-top: 15px;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
 }
-
 .label {
-    font-size: 14px;
-    opacity: 0.95;
-    margin-bottom: 8px;
-    margin-top: 0;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
-
 .list {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
 }
-
 .tag {
-    font-size: 12px;
-    padding: 6px 12px;
-    background-color: #1e293b;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid #334155;
-    border-radius: 15px;
+    border-radius: 20px;
     color: #cbd5e1;
     cursor: pointer;
     transition: all 0.2s;
+    font-family: monospace;
 }
-
 .tag:hover {
-    background-color: #334155;
+    background: #3b82f6;
+    border-color: #3b82f6;
     color: white;
-    transform: translateY(-1px);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    transform: translateY(-2px);
 }

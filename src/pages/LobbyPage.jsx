@@ -22,20 +22,33 @@ const LobbyPage = () => {
 
   useLobbyControls(startGame, isGamePlaying)
 
-  return (
+ return (
     <div className={styles.container}>
+      <div className={styles.overlay}></div>
+      
       <header className={styles.header}>
-        <h1>TETRIS MULTIPLAYER</h1>
+        <h1 className={styles.mainTitle}>TETRIS <span className={styles.highlight}>MULTIPLAYER</span></h1>
+        
+        <div className={styles.statusBox}>
+           <div className={`${styles.pulseDot} ${isGameOver ? styles.red : styles.green}`}></div>
+           <p>{isGameOver ? "GAME OVER" : "WAITING FOR PLAYERS..."}</p>
+        </div>
+
         <h2 className={styles.blinkTitle}>
-          PRESS ENTER TO START THE GAME
+          PRESS <span className={styles.key}>ENTER</span> TO START
         </h2>
-        <p>Actual State: {isGameOver ? "Game Over" : "Waiting Players..."}</p>
       </header>
 
       <div className={styles.panelsGrid}>
-        <div className="panel">
-          <LastGame />
+        <div className={styles.card}>
           <PlayerList />
+        </div>
+        
+        <div className={`${styles.card} ${styles.centerCard}`}>
+          <LastGame />
+        </div>
+        
+        <div className={styles.card}>
           <Ranking />
         </div>
       </div>

@@ -31,17 +31,33 @@ const LoginPage = () => {
   return (
     <>
       <div className={styles.container}>
+        <div className={styles.overlay}></div>
+
         <div className={styles.card}>
-          <h1 className={styles.title}>Tetris Multiplayer</h1>
-          <form onSubmit={handleSubmit}>
-            <input
-              aria-label="Player Name"
-              className={styles.input}
-              ref={inputRef}
-              placeholder="Enter your name..."
-            />
-            <p className={styles.errorMessage}>{error}</p>
-            <button type="submit" className={styles.button}>Start Game</button>
+          <div className={styles.iconHeader}>
+            <i className="fa-solid fa-gamepad"></i>
+          </div>
+          <h1 className={styles.title}>TETRIS <br /><span className={styles.highlight}>MULTIPLAYER</span></h1>
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <i className={`fa-solid fa-user ${styles.inputIcon}`}></i>
+              <input
+                aria-label="Player Name"
+                className={styles.input}
+                ref={inputRef}
+                placeholder="ENTER NICKNAME..."
+                maxLength={12}
+              />
+            </div>
+
+            <p className={styles.errorMessage}>
+              {error && <><i className="fa-solid fa-triangle-exclamation"></i> {error}</>}
+            </p>
+
+            <button type="submit" className={styles.button}>
+              START GAME <i className="fa-solid fa-chevron-right"></i>
+            </button>
           </form>
 
           <RecentNames onSelectName={loginUser} />

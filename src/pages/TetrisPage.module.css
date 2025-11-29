@@ -1,95 +1,235 @@
 .layout {
+    min-height: 100vh;
+    width: 100%;
     display: flex;
     justify-content: center;
-    gap: 40px;
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    align-items: flex-start;
+    gap: 40px; 
+    padding: 60px 20px; 
+    background: radial-gradient(circle at 50% 50%, #1a2332 0%, #05080f 100%);
+    position: relative;
+    overflow-x: hidden;
+}
+
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.leftPanel, .rightPanel {
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1;
+    margin-top: 80px; 
 }
 
 .gameSection {
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 1;
 }
 
 .title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-    background: linear-gradient(to right, #4ade80, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 25px;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+    letter-spacing: 4px;
+    font-style: italic;
 }
 
-.panel {
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.boardFrame {
+    position: relative;
+    padding: 10px;
+    background: #0f172a;
+    border-radius: 4px;
+    border: 1px solid #334155;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+}
+
+.boardGlow {
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 6px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
+    z-index: -1;
+    opacity: 0.6;
+    filter: blur(12px);
+}
+
+.hudCard {
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.hudCard:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
 }
 
 .statBox {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 15px 10px;
     border-radius: 8px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .statLabel {
-    font-size: 0.85rem;
-    color: #9ca3af;
+    font-size: 0.75rem;
+    color: #94a3b8;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-bottom: 5px;
 }
 
 .statValue {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: bold;
-    color: white;
-}
-
-.banner {
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-    animation: pulse 2s infinite;
-}
-
-.paused { background: rgba(251, 191, 36, 0.2); color: var(--warning-color); border: 1px solid var(--warning-color); }
-.gameOver { background: rgba(239, 68, 68, 0.2); color: var(--danger-color); border: 1px solid var(--danger-color); }
-.gameOver span {
-    margin-left: 10px;
-}
-
-.controlsHelp {
-    background: rgba(0,0,0,0.2);
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    color: #4ade80;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
 }
 
 .controlsHelp p {
     display: flex;
     justify-content: space-between;
-    margin: 5px 0;
-    color: #d1d5db;
+    align-items: center;
+    margin: 8px 0;
+    color: #cbd5e1;
+    font-size: 0.85rem;
 }
 
 .key {
-    background: #374151;
-    padding: 2px 6px;
+    background: #334155;
+    padding: 4px 8px;
     border-radius: 4px;
     font-family: monospace;
     font-size: 0.8rem;
+    color: #fbbf24;
+    border-bottom: 2px solid #1e293b;
 }
 
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 1; }
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(17, 24, 39, 0.6); 
+    backdrop-filter: blur(8px);      
+    z-index: 9999;                   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modalBox {
+    background: rgba(17, 24, 39, 0.95);
+    padding: 40px 60px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(17, 24, 39, 0.8);
+    border: 2px solid transparent;
+    transform: scale(0.9);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    min-width: 300px;
+}
+
+.modalTitle {
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: 4px;
+    font-style: italic;
+    text-shadow: 0 0 20px currentColor;
+}
+
+.modalSubtitle {
+    color: #94a3b8;
+    margin-top: 10px;
+    font-family: monospace;
+    font-size: 1.2rem;
+    animation: blink 1s infinite;
+}
+
+.modalPaused {
+    border-color: #fbbf24;
+    color: #fbbf24;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+}
+
+.modalGameOver {
+    border-color: #ef4444;
+    color: #ef4444;
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+}
+
+.countDown {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 20px;
+    font-family: monospace;
+    text-shadow: 0 0 20px #ef4444;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popIn {
+    to { transform: scale(1); }
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+@media (max-width: 1200px) {
+    .layout {
+        flex-wrap: wrap; 
+    }
+    
+    .gameSection { order: 1; width: 100%; }
+    .rightPanel { order: 2; margin-top: 0; }
+    .leftPanel { order: 3; margin-top: 0; }
+}
+
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+    }
+    
+    .leftPanel, .rightPanel {
+        width: 100%;
+        max-width: 400px;
+    }
 }
