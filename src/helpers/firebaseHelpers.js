@@ -18,6 +18,7 @@ export const buildStartGameUpdates = (playersData) => {
                 updates[DB_PATHS.player(pid)] = null;
             } else {
                 updates[DB_PATHS.playerStats(pid)] = PlayerModel.createInitialStats();
+                updates[DB_PATHS.playerAttacks(pid)] = null;
             }
         });
     }

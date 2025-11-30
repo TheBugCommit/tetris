@@ -38,7 +38,7 @@ const TetrisPage = () => {
 
     return (
         <div className={`cyber-background ${styles.layout}`}>
-            <div class="cyber-overlay"></div>
+            <div className="cyber-overlay"></div>
 
             {showModal && (
                 <div className={styles.modalOverlay}>
@@ -62,20 +62,20 @@ const TetrisPage = () => {
                 </div>
                 <div className={`${styles.hudCard} ${styles.controlsCard}`}>
                     <div className={styles.controlsHelp}>
-                        <p><span class="key-cap"><i class="fa-solid fa-arrows-left-right"></i></span> Move</p>
-                        <p><span class="key-cap"><i class="fa-solid fa-arrow-up"></i></span> Rotate</p>
-                        <p><span class="key-cap"><i class="fa-solid fa-arrow-down"></i></span> Drop</p>
+                        <p><span className="key-cap"><i className="fa-solid fa-arrows-left-right"></i></span> Move</p>
+                        <p><span className="key-cap"><i className="fa-solid fa-arrow-up"></i></span> Rotate</p>
+                        <p><span className="key-cap"><i className="fa-solid fa-arrow-down"></i></span> Drop</p>
                         <p>
-                            <span class="key-cap">
-                                <i class="fa-solid fa-s"></i>
-                                <i class="fa-solid fa-p"></i>
-                                <i class="fa-solid fa-a"></i>
-                                <i class="fa-solid fa-c"></i>
-                                <i class="fa-solid fa-e"></i>
+                            <span className="key-cap">
+                                <i className="fa-solid fa-s"></i>
+                                <i className="fa-solid fa-p"></i>
+                                <i className="fa-solid fa-a"></i>
+                                <i className="fa-solid fa-c"></i>
+                                <i className="fa-solid fa-e"></i>
                             </span>
                             Hard Drop
                         </p>
-                        <p><span class="key-cap"><i class="fa-solid fa-p"></i></span> Pause</p>
+                        <p><span className="key-cap"><i className="fa-solid fa-p"></i></span> Pause</p>
                     </div>
                 </div>
             </div>

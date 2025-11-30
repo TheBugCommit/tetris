@@ -5,6 +5,10 @@ export const useGameAttacks = (playerId, isJoined, isGamePlaying, showNotificati
     const [garbagePending, setGarbagePending] = useState(0);
 
     useEffect(() => {
+        setGarbagePending(0);
+    }, [isGamePlaying]);
+
+    useEffect(() => {
         if (!playerId || !isJoined || !isGamePlaying) return;
 
         const unsubscribe = gameService.subscribeToIncomingAttacks(playerId, (lines, senderName) => {
