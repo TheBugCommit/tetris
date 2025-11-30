@@ -7,20 +7,20 @@ const PlayerList = () => {
     const { players } = useRoom();
     
     return (
-        <div className={styles.wrapper}>
-            <h3 className={styles.header}>
-                <i className="fa-solid fa-users"></i> CONNECTED ({players.length})
+        <div className="g-list-wrapper">
+            <h3 className="g-list-header">
+                <i className="fa-solid fa-users"></i> CONNECTED ({players.filter(p => p.isOnline).length})
             </h3>
-            <ul className={styles.list}>
+            <ul className="g-list">
                 {players.map((p) => {
                     const isMe = p.id === playerId;
                     return (
-                        <li key={p.id} className={`${styles.listItem} ${isMe ? styles.meItem : ''}`}>
-                            <div className={styles.nameGroup}>
+                        <li key={p.id} className={`g-list-item ${isMe ? 'me' : ''}`}>
+                            <div className="g-item-left">
                                 <i className={`fa-solid ${isMe ? 'fa-user-astronaut' : 'fa-user'}`}></i>
                                 <span>{p.name} {isMe && "(YOU)"}</span>
                             </div>
-                            <div className={styles.status}>
+                            <div className="status">
                                 {p.isOnline 
                                     ? <i className={`fa-solid fa-circle ${styles.statusOnline}`}></i>
                                     : <i className={`fa-regular fa-circle-xmark ${styles.statusOffline}`}></i>
@@ -29,7 +29,7 @@ const PlayerList = () => {
                         </li>
                     );
                 })}
-                {players.length === 0 && <li className={styles.empty}>Waiting connections...</li>}
+                {players.length === 0 && <li className="g-list-empty">Waiting connections...</li>}
             </ul>
         </div>
     );

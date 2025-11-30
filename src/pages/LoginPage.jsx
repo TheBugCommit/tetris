@@ -30,21 +30,24 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.overlay}></div>
+      <div className={`cyber-background ${styles.container}`}>
+        <div className="cyber-overlay"></div>
 
-        <div className={styles.card}>
+        <div className={`glass-panel ${styles.card}`}>
           <div className={styles.iconHeader}>
             <i className="fa-solid fa-gamepad"></i>
           </div>
-          <h1 className={styles.title}>TETRIS <br /><span className={styles.highlight}>MULTIPLAYER</span></h1>
+          <h1 className={styles.title}>
+              TETRIS <br />
+              <span className="text-highlight">MULTIPLAYER</span>
+          </h1>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>
               <i className={`fa-solid fa-user ${styles.inputIcon}`}></i>
               <input
                 aria-label="Player Name"
-                className={styles.input}
+                className="g-input" 
                 ref={inputRef}
                 placeholder="ENTER NICKNAME..."
                 maxLength={12}
@@ -55,7 +58,7 @@ const LoginPage = () => {
               {error && <><i className="fa-solid fa-triangle-exclamation"></i> {error}</>}
             </p>
 
-            <button type="submit" className={styles.button}>
+            <button type="submit" className="g-btn">
               START GAME <i className="fa-solid fa-chevron-right"></i>
             </button>
           </form>

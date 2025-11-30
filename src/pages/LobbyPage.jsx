@@ -15,28 +15,28 @@ const LobbyPage = () => {
   } = useRoom();
 
   useEffect(() => {
-    if (isGameOver) {
+    if (!isGamePlaying) {
       setWaitingState();
     }
-  }, [isGameOver]);
+  }, [isGamePlaying]);
 
   useLobbyControls(startGame, isGamePlaying)
 
- return (
+  return (
     <div className={`cyber-background ${styles.container}`}>
       <div className="cyber-overlay"></div>
-      
+
       <header className={styles.header}>
         <h1 className={`neon-title ${styles.mainTitle}`}>
-            TETRIS <span className={styles.highlight}>MULTIPLAYER</span>
+          TETRIS <span className="text-highlight">MULTIPLAYER</span>
         </h1>
-        
+
         <div className={styles.statusBox}>
-           <div className={`${styles.pulseDot} ${isGameOver ? styles.red : styles.green}`}></div>
-           <p>{isGameOver ? "GAME OVER" : "WAITING FOR PLAYERS..."}</p>
+          <div className={`${styles.pulseDot} ${isGameOver ? styles.red : styles.green}`}></div>
+          <p>{isGameOver ? "GAME OVER" : "WAITING FOR PLAYERS..."}</p>
         </div>
 
-        <h2 className={styles.blinkTitle} style={{color: 'var(--text-muted)', fontSize: '1.2rem'}}>
+        <h2 className="press-start-text">
           PRESS <span className="key-cap">ENTER</span> TO START
         </h2>
       </header>
@@ -45,11 +45,11 @@ const LobbyPage = () => {
         <div className={`glass-panel ${styles.gridItem}`}>
           <PlayerList />
         </div>
-        
+
         <div className={`glass-panel ${styles.gridItem} ${styles.centerCard}`}>
           <LastGame />
         </div>
-        
+
         <div className={`glass-panel ${styles.gridItem}`}>
           <Ranking />
         </div>

@@ -1,9 +1,9 @@
 .boardContainer {
     padding: 10px;
-    background: var(--panel-bg);
+    background: var(--bg-panel);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-lg);
 }
 
 .board {
@@ -11,7 +11,7 @@
     grid-template-columns: repeat(10, 26px);
     grid-template-rows: repeat(20, 26px);
     gap: 1px;
-    background: #000;
+    background: var(--bg-dark);
 }
 
 .cell {

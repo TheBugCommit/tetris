@@ -39,26 +39,17 @@
 
 .boardGlow {
     position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    inset: -2px;
     border-radius: 6px;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+    background: linear-gradient(45deg, var(--primary), var(--secondary), var(--primary));
     z-index: -1;
     opacity: 0.6;
     filter: blur(12px);
 }
 
 .hudCard {
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    /* Extendemos estilos globales en el JSX usando 'glass-panel', aquí solo overrides */
     padding: 20px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, border-color 0.2s;
-}
-
-.hudCard:hover {
-    border-color: rgba(59, 130, 246, 0.4);
 }
 
 .statsGrid {
@@ -89,7 +80,7 @@
 .statValue {
     font-size: 1.8rem;
     font-weight: bold;
-    color: var(--success-color);
+    color: var(--success);
     font-family: var(--font-mono);
     text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
 }
@@ -105,8 +96,8 @@
 
 .modalOverlay {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
+    inset: 0;
+    background: var(--bg-panel);
     backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
@@ -123,7 +114,6 @@
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
     border: 2px solid transparent;
     transform: scale(0.9);
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     min-width: 300px;
 }
 
@@ -145,14 +135,14 @@
 }
 
 .modalPaused {
-    border-color: var(--warning-color);
-    color: var(--warning-color);
+    border-color: var(--warning);
+    color: var(--warning);
     box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
 }
 
 .modalGameOver {
-    border-color: var(--danger-color);
-    color: var(--danger-color);
+    border-color: var(--danger);
+    color: var(--danger);
     box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
 }
 
@@ -162,32 +152,20 @@
     color: #fff;
     margin-top: 20px;
     font-family: var(--font-mono);
-    text-shadow: 0 0 20px var(--danger-color);
+    text-shadow: 0 0 20px var(--danger);
 }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes popIn { to { transform: scale(1); } }
 @keyframes blink { 50% { opacity: 0.5; } }
 
 @media (max-width: 1200px) {
-    .layout {
-        flex-wrap: wrap; 
-    }
-    
+    .layout { flex-wrap: wrap; }
     .gameSection { order: 1; width: 100%; }
     .rightPanel { order: 2; margin-top: 0; }
     .leftPanel { order: 3; margin-top: 0; }
 }
 
 @media (max-width: 768px) {
-    .layout {
-        flex-direction: column;
-        align-items: center;
-        padding-top: 20px;
-    }
-    
-    .leftPanel, .rightPanel {
-        width: 100%;
-        max-width: 400px;
-    }
+    .layout { flex-direction: column; align-items: center; padding-top: 20px; }
+    .leftPanel, .rightPanel { width: 100%; max-width: 400px; }
 }

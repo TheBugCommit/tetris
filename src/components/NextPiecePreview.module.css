@@ -18,9 +18,9 @@
     grid-template-rows: repeat(3, 20px);
     gap: 2px;
     
-    background: #111827;
+    background: var(--bg-dark);
     padding: 6px;
-    border: 1px solid #0f172a;
+    border: 1px solid var(--bg-dark);
     border-radius: 8px;
     width: max-content;
 }
@@ -29,5 +29,5 @@
     width: 20px;
     height: 20px;
     border-radius: 3px;
-    border: 1px solid #1f2937; /* Borde sutil */
+    border: 1px solid #1f2937;
 }

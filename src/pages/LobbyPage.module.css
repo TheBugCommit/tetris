@@ -20,13 +20,6 @@
     margin-bottom: 0;
 }
 
-.highlight {
-    background: linear-gradient(to right, var(--success-color), var(--primary-color));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
 .panelsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -45,10 +38,11 @@
 }
 
 .centerCard {
-    border-color: rgba(168, 85, 247, 0.4) !important;
+    /* Sobrescribe el color del borde específico para esta carta si quieres */
+    border-color: rgba(168, 85, 247, 0.4);
     box-shadow: 0 12px 40px rgba(168, 85, 247, 0.15);
-    
 }
+
 .statusBox {
     display: flex;
     align-items: center;
@@ -56,15 +50,15 @@
     background: rgba(255, 255, 255, 0.05);
     padding: 8px 16px;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     font-size: 0.9rem;
     color: var(--text-muted);
     text-transform: uppercase;
 }
 
-.pulseDot { width: 8px; height: 8px; border-radius: 50%; }
-.green { background: var(--success-color); box-shadow: 0 0 8px var(--success-color); }
-.red { background: var(--danger-color); box-shadow: 0 0 8px var(--danger-color); }
+.pulseDot { width: 8px; height: 8px; border-radius: 50%; animation: pulseStatus 2s infinite;}
+.green { background: var(--success); box-shadow: 0 0 8px var(--success); }
+.red { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
 
 @media (max-width: 1024px) {
     .panelsGrid { grid-template-columns: 1fr 1fr; }
@@ -74,4 +68,10 @@
     .panelsGrid { grid-template-columns: 1fr; }
     .centerCard { grid-column: auto; }
     .mainTitle { font-size: 2.5rem; }
+}
+
+@keyframes pulseStatus {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }

@@ -57,25 +57,21 @@ const TetrisPage = () => {
             )}
 
             <div className={styles.leftPanel}>
-                <div className={styles.hudCard}>
+                <div className={`glass-panel ${styles.hudCard}`}>
                     <PlayerList />
                 </div>
-                <div className={`${styles.hudCard} ${styles.controlsCard}`}>
+                <div className={`glass-panel ${styles.hudCard}`}>
                     <div className={styles.controlsHelp}>
                         <p><span className="key-cap"><i className="fa-solid fa-arrows-left-right"></i></span> Move</p>
                         <p><span className="key-cap"><i className="fa-solid fa-arrow-up"></i></span> Rotate</p>
                         <p><span className="key-cap"><i className="fa-solid fa-arrow-down"></i></span> Drop</p>
                         <p>
                             <span className="key-cap">
-                                <i className="fa-solid fa-s"></i>
-                                <i className="fa-solid fa-p"></i>
-                                <i className="fa-solid fa-a"></i>
-                                <i className="fa-solid fa-c"></i>
-                                <i className="fa-solid fa-e"></i>
+                                SPACE
                             </span>
                             Hard Drop
                         </p>
-                        <p><span className="key-cap"><i className="fa-solid fa-p"></i></span> Pause</p>
+                        <p><span className="key-cap">P</span> Pause</p>
                     </div>
                 </div>
             </div>
@@ -90,7 +86,7 @@ const TetrisPage = () => {
             </div>
 
             <div className={styles.rightPanel}>
-                <div className={styles.hudCard}>
+                <div className={`glass-panel ${styles.hudCard}`}>
                     <NextPiecePreview piece={nextPiece} />
                 </div>
 

@@ -1,12 +1,12 @@
 .container {
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-color);
     width: 100%;
 }
 .label {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--text-muted);
     margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -30,12 +30,12 @@
     color: #cbd5e1;
     cursor: pointer;
     transition: all 0.2s;
-    font-family: monospace;
+    font-family: var(--font-mono);
 }
 .tag:hover {
-    background: #3b82f6;
-    border-color: #3b82f6;
+    background: var(--primary);
+    border-color: var(--primary);
     color: white;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    box-shadow: var(--neon-shadow);
     transform: translateY(-2px);
 }
