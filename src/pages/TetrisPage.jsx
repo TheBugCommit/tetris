@@ -1,5 +1,4 @@
 import TetrisBoard from '../components/TetrisBoard';
-import PlayerList from '../components/PlayerList';
 import NextPiecePreview from '../components/NextPiecePreview';
 import ToastNotification from '../components/ToastNotification';
 import { useGameplay } from '../contexts/GameplayProvider';
@@ -8,6 +7,7 @@ import { useGameOverRedirect } from '../hooks/useGameOverRedirect';
 import styles from './TetrisPage.module.css';
 import { useTetris } from '../hooks/useTetris';
 import { useKeyboardControls } from '../hooks/useKeyboardControls';
+import LiveRanking from '../components/LiveRanking';
 
 const TetrisPage = () => {
     const {
@@ -58,7 +58,7 @@ const TetrisPage = () => {
 
             <div className={styles.leftPanel}>
                 <div className={`glass-panel ${styles.hudCard}`}>
-                    <PlayerList />
+                    <LiveRanking />
                 </div>
                 <div className={`glass-panel ${styles.hudCard}`}>
                     <div className={styles.controlsHelp}>

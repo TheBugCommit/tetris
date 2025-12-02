@@ -27,9 +27,7 @@ const LastGame = () => {
                 <div className="g-list-empty">No recent games played</div>
             ) : (
                 <ul className="g-list">
-                    {lastResults
-                        .sort((a, b) => b.gameStats.lines - a.gameStats.lines)
-                        .map((p, index) => (
+                    {lastResults.map((p, index) => (
                             <li key={`${p.id}_${index}`}
                                 className={`g-list-item ${getRankClass(index)}`}>
                                 <div className="g-item-left">

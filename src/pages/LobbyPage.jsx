@@ -1,5 +1,5 @@
 import { useRoom } from '../contexts/RoomProvider';
-import Ranking from '../components/Ranking';
+import HistoryRanking from '../components/HistoryRanking';
 import PlayerList from '../components/PlayerList';
 import LastGame from '../components/LastGame';
 import styles from './LobbyPage.module.css'
@@ -15,7 +15,7 @@ const LobbyPage = () => {
   useLobbyControls(startGame, isGamePlaying)
 
   const getStatusText = () => {
-    if (isGamePlaying && !isParticipating) return "GAME IN PROGRESS (SPECTATING)";
+    if (isGamePlaying && !isParticipating) return "GAME IN PROGRESS";
     return "WAITING FOR PLAYERS...";
   };
 
@@ -50,7 +50,7 @@ const LobbyPage = () => {
         </div>
 
         <div className={`glass-panel ${styles.gridItem}`}>
-          <Ranking />
+          <HistoryRanking />
         </div>
       </div>
     </div>

@@ -20,11 +20,20 @@ export function subscribeToPlayers(callback) {
 }
 
 export function subscribeToLastResults(callback) {
-    return createSubscription(DB_PATHS.lastResults, helpers.mapPlayersList, callback);
+    return createSubscription(DB_PATHS.lastResults, helpers.mapLastResults, callback);
 }
 
+export function subscribeToPlayersStats(callback) {
+    return createSubscription(DB_PATHS.allPlayersStats, (data) => data, callback);
+}
+
+export function subscribeToMyStats(playerId, callback) {
+    return createSubscription(DB_PATHS.playerStats(playerId), (data) => PlayerModel.playerStatsFromFirebase(data), callback);
+}
+
+
 export async function doStartGame() {
-    const snapshot = await get(ref(db, DB_PATHS.players));
+    const snapshot = await get(ref(db, DB_PATHS.players)); helpers.mapPlayersStats
     if (!snapshot.exists()) return;
     return update(ref(db), helpers.buildStartGameUpdates(snapshot.val()));
 }
@@ -32,7 +41,9 @@ export async function doStartGame() {
 export async function doGameOver() {
     try {
         const snapshot = await get(ref(db, DB_PATHS.players));
-        return update(ref(db), helpers.buildGameOverUpdates(snapshot.val()));
+        const statsSnap = await get(ref(db, DB_PATHS.allPlayersStats));
+
+        return update(ref(db), helpers.buildGameOverUpdates(snapshot.val(), statsSnap.val()));
     } catch (e) { console.error(e); }
 }
 
@@ -44,9 +55,13 @@ export function togglePause(currentPauseState) {
 
 export async function joinRoom(playerId, playerName) {
     const playerRef = ref(db, DB_PATHS.player(playerId));
+    const statsRef = ref(db, DB_PATHS.playerStats(playerId));
     const snapshot = await get(playerRef);
 
     onDisconnect(playerRef).update(PlayerModel.getDisconnectPayload());
+    onDisconnect(statsRef).remove();
+
+    await remove(statsRef);
 
     if (snapshot.exists()) {
         return update(playerRef, PlayerModel.getReconnectPayload());

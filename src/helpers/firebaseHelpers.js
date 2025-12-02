@@ -7,9 +7,8 @@ export const buildStartGameUpdates = (playersData) => {
     const updates = {};
     const gameState = GameStateModel.createPlayingState()
 
-    updates[`${DB_PATHS.gameState}/status`] = gameState.status;
-    updates[`${DB_PATHS.gameState}/isPaused`] = gameState.isPaused;
-    updates[DB_PATHS.lastResults] = null;
+    updates[DB_PATHS.gameStateStatus] = gameState.status;
+    updates[DB_PATHS.gameStateIsPaused] = gameState.isPaused;
 
     if (playersData) {
         Object.keys(playersData).forEach(pid => {
@@ -26,20 +25,26 @@ export const buildStartGameUpdates = (playersData) => {
     return updates;
 };
 
-export const buildGameOverUpdates = (playersData) => {
+export const buildGameOverUpdates = (playersData, statsData) => {
     const updates = {};
     updates[DB_PATHS.gameState] = GameStateModel.createGameOverState()
 
     if (playersData) {
-        const players = Object.fromEntries(
-            Object.entries(playersData)
-                .filter(([key, player]) => player.status === PlayerModel.PLAYER_STATUS.PLAYING)
-        );
+        const players = Object.entries(playersData)
+            .filter(([key, player]) => player.status === PlayerModel.PLAYER_STATUS.PLAYING);
 
-        updates[DB_PATHS.lastResults] = players;
-        Object.keys(playersData).forEach(pid => {
+        const results = {};
+
+        players.forEach(([pid, player]) => {
+            results[pid] = {
+                ...player,
+                gameStats: (statsData && statsData[pid]) ? statsData[pid] : PlayerModel.createInitialStats()
+            };
+
             updates[DB_PATHS.playerStatus(pid)] = PlayerModel.PLAYER_STATUS.WAITING;
         });
+
+        updates[DB_PATHS.lastResults] = results;
     }
     return updates;
 };
@@ -64,4 +69,21 @@ export const mapPlayersList = (data) => {
         PlayerModel.playerFromFirebase(playerData)
     );
 };
+
+export const mapLastResults = (data) => {
+    if (!data) return [];
+    return Object.values(data).map(item => ({
+        ...PlayerModel.playerFromFirebase(item),
+        gameStats: item.gameStats 
+            ? PlayerModel.playerStatsFromFirebase(item.gameStats) 
+            : PlayerModel.createInitialStats()
+    }));
+};
+
 export const mapIncomingAttack = (data) => AttackModel.attackFromFirebase(data);
+export const mapPlayersStats = (data) => {
+    if (!data) return [];
+    return Object.entries(data).map(([key, data]) => {
+        return { id: key, ...PlayerModel.playerStatsFromFirebase(data) }
+    })
+}

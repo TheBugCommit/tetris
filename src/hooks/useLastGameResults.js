@@ -5,7 +5,12 @@ export const useLastGameResults = () => {
     const [results, setResults] = useState([]);
 
     useEffect(() => {
-        return gameService.subscribeToLastResults(setResults);
+        return gameService.subscribeToLastResults((results) => {
+            if(!results) return;
+
+            results.sort((a, b) => b.gameStats.lines - a.gameStats.lines)  
+            setResults(results);
+        });
     }, []);
 
     return results;

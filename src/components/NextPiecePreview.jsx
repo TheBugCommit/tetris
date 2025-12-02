@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { SHAPES, COLORS } from "../constants/tetrisConstants";
 import styles from './NextPiecePreview.module.css'
 
@@ -49,4 +49,4 @@ const NextPiecePreview = ({ piece }) => {
     );
 };
 
-export default NextPiecePreview
+export default React.memo(NextPiecePreview)

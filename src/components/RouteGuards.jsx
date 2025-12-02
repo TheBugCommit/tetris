@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useUser } from '../contexts/UserProvider';
 import { useRoom } from '../contexts/RoomProvider';
 import { PLAYER_STATUS } from '../models/PlayerModel';
+import LoadingScreen from '../components/LoadingScreen';
 
 export const RequireAuth = () => {
     const { isJoined } = useUser();

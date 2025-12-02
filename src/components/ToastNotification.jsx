@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from './ToastNotification.module.css';
 
 const ToastNotification = ({ notification }) => {
@@ -11,4 +12,4 @@ const ToastNotification = ({ notification }) => {
         </div>
     );
 };
-export default ToastNotification;
+export default React.memo(ToastNotification);
