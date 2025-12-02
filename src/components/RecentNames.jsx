@@ -2,7 +2,7 @@ import styles from './RecentNames.module.css'
 import { useRecentNames } from "../hooks/useRecentNames";
 
 const RecentNames = ({ onSelectName }) => {
-    const [names] = useRecentNames();
+    const { names } = useRecentNames();
 
     if (names.length === 0) return null;
 

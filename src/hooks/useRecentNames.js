@@ -9,5 +9,5 @@ export const useRecentNames = () => {
         setNames(updatedList);
     };
 
-    return [names, addName];
+    return { names, addName };
 };

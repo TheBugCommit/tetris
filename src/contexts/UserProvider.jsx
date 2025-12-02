@@ -3,6 +3,8 @@ import storageService from '../services/storageService'
 import { useRoomConnection } from '../hooks/useRoomConnection';
 import * as PlayerModel from "../models/PlayerModel";
 import { useNotification } from '../hooks/useNotification';
+import { v4 as uuidv4 } from 'uuid';
+import { useRecentNames } from '../hooks/useRecentNames';
 
 const UserContext = createContext();
 
@@ -14,11 +16,14 @@ export const UserProvider = ({ children }) => {
 
     const { notification, showNotification } = useNotification();
     const { isJoined, isLoading } = useRoomConnection(user, showNotification);
+    const { addName } = useRecentNames();
 
-    const setPlayerInfo = useCallback((id, name) => {
-        const newPlayerLocal = PlayerModel.createPlayer(id, name, true);
+    const setPlayerInfo = useCallback((name) => {
+        const newPlayerId = uuidv4();
+        const newPlayerLocal = PlayerModel.createPlayer(newPlayerId, name, true);
         setUser(newPlayerLocal);
         storageService.setUser(newPlayerLocal);
+        addName(name)
     }, []);
 
     const value = useMemo(() => ({

@@ -101,6 +101,8 @@ export const useTetris = ({
         if (gameOver || paused) return;
         const { piece, board } = stateRef.current;
 
+        if (!piece) return false;
+
         if (!checkCollision(board, piece, dirX, dirY)) {
             setGameState(prev => ({
                 ...prev,
