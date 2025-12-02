@@ -1,7 +1,8 @@
 import { ref, onValue, update, off, set, onDisconnect, get, onChildAdded, push, remove } from "firebase/database";
-import { db, DB_PATHS } from "../config/firebase";
+import { db } from "../persistance/firebase";
 import * as helpers from "../helpers/firebaseHelpers";
 import * as PlayerModel from "../models/PlayerModel";
+import { DB_PATHS } from "../config/firebase";
 
 function createSubscription(path, mapper, callback) {
     const dbRef = ref(db, path);
