@@ -5,6 +5,7 @@ import * as PlayerModel from "../models/PlayerModel";
 import { useNotification } from '../hooks/useNotification';
 import { v4 as uuidv4 } from 'uuid';
 import { useRecentNames } from '../hooks/useRecentNames';
+import  * as gameService from '../services/gameService'
 
 const UserContext = createContext();
 
@@ -26,14 +27,22 @@ export const UserProvider = ({ children }) => {
         addName(name)
     }, []);
 
+    const logout = useCallback(() => {
+        storageService.clearUser();
+        storageService.clearScoreSubmitted(); 
+        gameService.logout();
+        setUser(PlayerModel.createPlayer("", "", false));
+    }, []);
+
     const value = useMemo(() => ({
         playerId: user.id,
         playerName: user.name,
         isJoined,
         isLoading,
         setPlayerInfo,
+        logout,
         notification
-    }), [user, isJoined, isLoading, setPlayerInfo]);
+    }), [user, isJoined, isLoading, setPlayerInfo, logout]);
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

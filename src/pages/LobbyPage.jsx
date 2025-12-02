@@ -4,6 +4,7 @@ import PlayerList from '../components/PlayerList';
 import LastGame from '../components/LastGame';
 import styles from './LobbyPage.module.css'
 import { useLobbyControls } from '../hooks/useLobbyControls';
+import { useUser } from '../contexts/UserProvider';
 
 const LobbyPage = () => {
   const {
@@ -11,6 +12,7 @@ const LobbyPage = () => {
     startGame,
     isParticipating,
   } = useRoom();
+  const { logout } = useUser();
 
   useLobbyControls(startGame, isGamePlaying)
 
@@ -22,6 +24,10 @@ const LobbyPage = () => {
   return (
     <div className={`cyber-background ${styles.container}`}>
       <div className="cyber-overlay"></div>
+
+      <button className={styles.logoutBtn} onClick={logout} title="Disconnect">
+         <i className="fa-solid fa-power-off"></i> LOGOUT
+      </button>
 
       <header className={styles.header}>
         <h1 className={`neon-title ${styles.mainTitle}`}>

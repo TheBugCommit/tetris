@@ -1,4 +1,4 @@
-import { ref, onValue, update, off, set, onDisconnect, get, onChildAdded, push, remove } from "firebase/database";
+import { ref, onValue, update, off, set, onDisconnect, get, onChildAdded, push, remove, goOffline, goOnline } from "firebase/database";
 import { db } from "../persistance/firebase";
 import * as helpers from "../helpers/firebaseHelpers";
 import * as PlayerModel from "../models/PlayerModel";
@@ -54,6 +54,8 @@ export function togglePause(currentPauseState) {
 }
 
 export async function joinRoom(playerId, playerName) {
+    goOnline(db);
+
     const playerRef = ref(db, DB_PATHS.player(playerId));
     const statsRef = ref(db, DB_PATHS.playerStats(playerId));
     const snapshot = await get(playerRef);
@@ -100,4 +102,8 @@ export function subscribeToIncomingAttacks(myPlayerId, onAttackReceived) {
 
 export function clearGameResults() {
     set(ref(db, DB_PATHS.lastResults), null);
+}
+
+export function logout() {
+    goOffline(db);
 }

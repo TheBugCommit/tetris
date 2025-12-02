@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
 .header {
@@ -38,7 +39,6 @@
 }
 
 .centerCard {
-    /* Sobrescribe el color del borde específico para esta carta si quieres */
     border-color: rgba(168, 85, 247, 0.4);
     box-shadow: 0 12px 40px rgba(168, 85, 247, 0.15);
 }
@@ -60,14 +60,56 @@
 .green { background: var(--success); box-shadow: 0 0 8px var(--success); }
 .red { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
 
+.logoutBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.logoutBtn:hover {
+    background: var(--danger);
+    color: white;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    transform: translateY(-2px);
+}
+
+.logoutBtn:active {
+    transform: translateY(0);
+}
+
 @media (max-width: 1024px) {
     .panelsGrid { grid-template-columns: 1fr 1fr; }
     .centerCard { grid-column: span 2; }
 }
+
 @media (max-width: 768px) {
     .panelsGrid { grid-template-columns: 1fr; }
     .centerCard { grid-column: auto; }
     .mainTitle { font-size: 2.5rem; }
+    .logoutBtn {
+        position: static;
+        margin-bottom: 20px;
+        align-self: flex-end;
+        width: auto;
+    }
 }
 
 @keyframes pulseStatus {

@@ -7,6 +7,7 @@ export const useRoomConnection = (user, showNotification) => {
 
     useEffect(() => {
         if (!user.id || !user.name) {
+            setIsJoined(false);
             setIsLoading(false);
             return;
         }
