@@ -21,6 +21,7 @@ export const DB_PATHS = {
     lastResults: `${ROOT}/lastGameResults`,
     player: (id) => `${ROOT}/players/${id}`,
     playerStats: (id) => `${ROOT}/players/${id}/gameStats`,
+    playerStatus: (id) => `${ROOT}/players/${id}/status`,
     playerAttacks: (id) => `${ROOT}/players/${id}/incomingAttacks`,
 };
 

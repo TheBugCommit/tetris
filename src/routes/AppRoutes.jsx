@@ -10,16 +10,16 @@ const AppRoutes = () => {
     <Routes>
       <Route element={<Layout />}>
         <Route element={<PublicOnlyRoute />}>
-            <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
         </Route>
         <Route element={<RequireAuth />}>
-            <Route element={<LobbyGuard />}>
-                <Route path="/lobby" element={<LobbyPage />} />
-            </Route>
+          <Route element={<LobbyGuard />}>
+            <Route path="/lobby" element={<LobbyPage />} />
+          </Route>
 
-            <Route element={<GameGuard />}>
-                <Route path="/tetris" element={<TetrisPage />} />
-            </Route>
+          <Route element={<GameGuard />}>
+            <Route path="/tetris" element={<TetrisPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -28,10 +28,6 @@ export async function doStartGame() {
     return update(ref(db), helpers.buildStartGameUpdates(snapshot.val()));
 }
 
-export function setGameToWaiting() {
-    return update(ref(db, DB_PATHS.gameState), helpers.buildWaitingState());
-}
-
 export async function doGameOver() {
     try {
         const snapshot = await get(ref(db, DB_PATHS.players));

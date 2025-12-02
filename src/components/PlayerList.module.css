@@ -1,19 +1,40 @@
 .statusOnline {
-    color: var(--success); 
+    color: var(--success);
     font-size: 10px;
     filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.6));
     animation: pulseStatus 2s infinite;
 }
 
 .statusOffline {
-    color: var(--danger); 
+    color: var(--danger);
     filter: drop-shadow(0 0 4px rgba(222, 74, 74, 0.6));
     font-size: 14px;
     animation: pulseStatus 2s infinite;
 }
 
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status span {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid;
+}
+
 @keyframes pulseStatus {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

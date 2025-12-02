@@ -1,5 +1,4 @@
 import { useRoom } from '../contexts/RoomProvider';
-import { useEffect } from 'react';
 import Ranking from '../components/Ranking';
 import PlayerList from '../components/PlayerList';
 import LastGame from '../components/LastGame';
@@ -8,19 +7,17 @@ import { useLobbyControls } from '../hooks/useLobbyControls';
 
 const LobbyPage = () => {
   const {
-    isGameOver,
     isGamePlaying,
     startGame,
-    setWaitingState,
+    isParticipating,
   } = useRoom();
 
-  useEffect(() => {
-    if (!isGamePlaying) {
-      setWaitingState();
-    }
-  }, [isGamePlaying]);
-
   useLobbyControls(startGame, isGamePlaying)
+
+  const getStatusText = () => {
+    if (isGamePlaying && !isParticipating) return "GAME IN PROGRESS (SPECTATING)";
+    return "WAITING FOR PLAYERS...";
+  };
 
   return (
     <div className={`cyber-background ${styles.container}`}>
@@ -32,13 +29,15 @@ const LobbyPage = () => {
         </h1>
 
         <div className={styles.statusBox}>
-          <div className={`${styles.pulseDot} ${isGameOver ? styles.red : styles.green}`}></div>
-          <p>{isGameOver ? "GAME OVER" : "WAITING FOR PLAYERS..."}</p>
+          <div className={`${styles.pulseDot} ${isGamePlaying ? styles.red : styles.green}`}></div>
+          <p>{getStatusText()}</p>
         </div>
 
-        <h2 className="press-start-text">
-          PRESS <span className="key-cap">ENTER</span> TO START
-        </h2>
+        {!isGamePlaying && (
+          <h2 className="press-start-text">
+            PRESS <span className="key-cap">ENTER</span> TO START
+          </h2>
+        )}
       </header>
 
       <div className={styles.panelsGrid}>

@@ -1,12 +1,15 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import * as gameService from "../services/gameService";
 import * as GameStateModel from '../models/GameStateModel'
+import { useZombieCleaner } from '../hooks/useZombieCleaner';
+import { useUser } from './UserProvider';
 
 const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
-    const [gameState, setGameState] = useState(() => GameStateModel.createWaitingState());
+    const [gameState, setGameState] = useState(null);
     const [players, setPlayers] = useState([]);
+    const { playerId } = useUser();
 
     useEffect(() => {
         const unsubGame = gameService.subscribeToGameState(setGameState);
@@ -19,22 +22,25 @@ export const RoomProvider = ({ children }) => {
     }, []);
 
     const startGame = useCallback(async () => await gameService.doStartGame(), []);
-    const togglePause = useCallback(() => gameService.togglePause(gameState.isPaused), [gameState.isPaused]);
+    const togglePause = useCallback(() => {
+        if (gameState) {
+            gameService.togglePause(gameState.isPaused);
+        }
+    }, [gameState]);
     const setGameOver = useCallback(async () => await gameService.doGameOver(), []);
-    const setWaitingState = useCallback(() => gameService.setGameToWaiting(), []);
+
+    useZombieCleaner(gameState, players, playerId)
 
     const value = useMemo(() => ({
-        isGamePlaying: gameState.status === GameStateModel.GAME_STATUS.PLAYING,
-        isGameOver: gameState.status === GameStateModel.GAME_STATUS.GAME_OVER,
-        isWaiting: gameState.status === GameStateModel.GAME_STATUS.WAITING,
-        isPaused: gameState.isPaused,
-        gameState,
+        isGamePlaying: gameState?.status === GameStateModel.GAME_STATUS.PLAYING,
+        isGameOver: gameState?.status === GameStateModel.GAME_STATUS.GAME_OVER,
+        isPaused: gameState?.isPaused || false,
+        gameState: gameState || GameStateModel.createGameOverState(),
         players,
-        setWaitingState,
         startGame,
         togglePause,
         setGameOver
-    }), [gameState, players, startGame, togglePause, setGameOver, setWaitingState]);
+    }), [gameState, players, startGame, togglePause, setGameOver]);
 
     return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;
 };

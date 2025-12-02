@@ -19,6 +19,7 @@ export const buildStartGameUpdates = (playersData) => {
             } else {
                 updates[DB_PATHS.playerStats(pid)] = PlayerModel.createInitialStats();
                 updates[DB_PATHS.playerAttacks(pid)] = null;
+                updates[DB_PATHS.playerStatus(pid)] = PlayerModel.PLAYER_STATUS.PLAYING;
             }
         });
     }
@@ -30,18 +31,24 @@ export const buildGameOverUpdates = (playersData) => {
     updates[DB_PATHS.gameState] = GameStateModel.createGameOverState()
 
     if (playersData) {
-        updates[DB_PATHS.lastResults] = playersData;
+        const players = Object.fromEntries(
+            Object.entries(playersData)
+                .filter(([key, player]) => player.status === PlayerModel.PLAYER_STATUS.PLAYING)
+        );
+
+        updates[DB_PATHS.lastResults] = players;
+        Object.keys(playersData).forEach(pid => {
+            updates[DB_PATHS.playerStatus(pid)] = PlayerModel.PLAYER_STATUS.WAITING;
+        });
     }
     return updates;
 };
-
-export const buildWaitingState = () => GameStateModel.createWaitingState()
 
 export const buildAttackUpdates = (allPlayers, myPlayerId, myName, lines, idGenerator) => {
     const updates = {};
     const attackPayload = AttackModel.createAttack(myName, lines);
     allPlayers.forEach(player => {
-        if (player.id !== myPlayerId && player.isOnline) {
+        if (player.id !== myPlayerId && player.isOnline && player.status === PlayerModel.PLAYER_STATUS.PLAYING) {
             const newKey = idGenerator();
             const path = `${DB_PATHS.playerAttacks(player.id)}/${newKey}`;
             updates[path] = attackPayload;
@@ -53,7 +60,7 @@ export const buildAttackUpdates = (allPlayers, myPlayerId, myName, lines, idGene
 export const mapGameState = (data) => GameStateModel.gameStateFromFirebase(data);
 export const mapPlayersList = (data) => {
     if (!data) return [];
-    return Object.values(data).map(playerData => 
+    return Object.values(data).map(playerData =>
         PlayerModel.playerFromFirebase(playerData)
     );
 };

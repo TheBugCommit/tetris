@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
     });
 
     const { notification, showNotification } = useNotification();
-    const isJoined = useRoomConnection(user, showNotification);
+    const { isJoined, isLoading } = useRoomConnection(user, showNotification);
 
     const setPlayerInfo = useCallback((id, name) => {
         const newPlayerLocal = PlayerModel.createPlayer(id, name, true);
@@ -25,9 +25,10 @@ export const UserProvider = ({ children }) => {
         playerId: user.id,
         playerName: user.name,
         isJoined,
+        isLoading,
         setPlayerInfo,
         notification
-    }), [user, isJoined, setPlayerInfo]);
+    }), [user, isJoined, isLoading, setPlayerInfo]);
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
