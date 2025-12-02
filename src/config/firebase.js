@@ -7,11 +7,8 @@ export const DB_PATHS = {
     players: `${ROOT}/players`,
     lastResults: `${ROOT}/lastGameResults`,
     player: (id) => `${ROOT}/players/${id}`,
-
-        // TODO: moure els atacks tambe
     playerStats: (id) => `${ROOT}/players_stats/${id}`,
     allPlayersStats: `${ROOT}/players_stats`,
-
     playerStatus: (id) => `${ROOT}/players/${id}/status`,
-    playerAttacks: (id) => `${ROOT}/players/${id}/incomingAttacks`,
+    playerAttacks: (id) => `${ROOT}/attacks/${id}`,
 };

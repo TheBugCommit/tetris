@@ -58,13 +58,16 @@ export async function joinRoom(playerId, playerName) {
 
     const playerRef = ref(db, DB_PATHS.player(playerId));
     const statsRef = ref(db, DB_PATHS.playerStats(playerId));
+    const attacksRef = ref(db, DB_PATHS.playerAttacks(playerId));
     const snapshot = await get(playerRef);
 
     onDisconnect(playerRef).update(PlayerModel.getDisconnectPayload());
     onDisconnect(statsRef).remove();
+    onDisconnect(attacksRef).remove();
 
     await remove(statsRef);
-
+    await remove(attacksRef);
+    
     if (snapshot.exists()) {
         return update(playerRef, PlayerModel.getReconnectPayload());
     } else {
