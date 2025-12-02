@@ -67,6 +67,20 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow: hidden; 
+    min-width: 0;
+}
+
+.statValue {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--success);
+    font-family: var(--font-mono);
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+    white-space: nowrap;      
+    overflow: hidden;         
+    text-overflow: ellipsis;  
+    max-width: 100%;          
 }
 
 .statLabel {
@@ -77,21 +91,13 @@
     margin-bottom: 5px;
 }
 
-.statValue {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--success);
-    font-family: var(--font-mono);
-    text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
-}
-
 .controlsHelp p {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 8px 0;
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: 1.2rem;
 }
 
 .modalOverlay {

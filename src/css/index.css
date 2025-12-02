@@ -180,9 +180,33 @@ button {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-height: 380px; 
+    overflow-y: auto;  
+    padding-right: 8px;
+}
+
+.g-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.g-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.g-list::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.g-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary-glow);
 }
 
 .g-list-item {
+    flex-shrink: 0;
     padding: 12px;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 8px;
@@ -224,6 +248,16 @@ button {
     gap: 12px;
 }
 
+.g-item-left {
+    min-width: 0;
+    flex: 1;
+}
+
+.g-item-right {
+    flex-shrink: 0; 
+    margin-left: 10px; 
+}
+
 .g-pill {
     background: rgba(0, 0, 0, 0.3);
     padding: 4px 10px;
@@ -242,6 +276,13 @@ button {
     background: rgba(251, 191, 36, 0.1);
     box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
     animation: pulseGold 2s infinite alternate;
+}
+
+.g-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .rank-gold .g-rank-num,
