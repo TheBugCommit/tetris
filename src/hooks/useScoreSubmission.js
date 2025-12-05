@@ -12,7 +12,7 @@ export const useScoreSubmission = (isGameOver, isGamePlaying, playerGameStats, p
             return;
         }
 
-        if (isGameOver && playerGameStats.lines > 0 && !alreadySubmitted) {
+        if (isGameOver && !alreadySubmitted) {
             const submitScore = async () => {
                 try {
                     storageService.setScoreSubmitted();
